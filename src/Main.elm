@@ -48,7 +48,7 @@ init : () -> Url -> Nav.Key -> ( Model, Cmd Msg )
 init _ url key =
     let
         ( model, cmd ) =
-            initRoute (Route.route url)
+            initRoute key (Route.route url)
     in
     ( { key = key
       , model = model
@@ -57,14 +57,14 @@ init _ url key =
     )
 
 
-initRoute : Route.Route -> ( RoutedModel, Cmd Msg )
-initRoute route =
+initRoute : Nav.Key -> Route.Route -> ( RoutedModel, Cmd Msg )
+initRoute key route =
     case route of
         Route.Edit flags ->
-            Edit.init flags |> fix EditModel (RoutedMsg << EditMsg)
+            Edit.init key flags |> fix EditModel (RoutedMsg << EditMsg)
 
         Route.Show flags ->
-            Show.init flags |> fix ShowModel (RoutedMsg << ShowMsg)
+            Show.init key flags |> fix ShowModel (RoutedMsg << ShowMsg)
 
 
 view : Model -> Browser.Document Msg

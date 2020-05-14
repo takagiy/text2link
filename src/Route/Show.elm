@@ -1,5 +1,7 @@
 module Route.Show exposing (Flags, Model, Msg, init, update, view)
 
+import Browser.Navigation as Nav
+import Compress
 import Html exposing (..)
 
 
@@ -12,12 +14,16 @@ type Msg
 
 
 type alias Flags =
-    Maybe String
+    String
 
 
-init : Flags -> ( Model, Cmd Msg )
-init flags =
-    ( { text = Maybe.withDefault "" flags }, Cmd.none )
+init : Nav.Key -> Flags -> ( Model, Cmd Msg )
+init _ flags =
+    ( { text =
+            flags |> Compress.decode |> Maybe.withDefault ""
+      }
+    , Cmd.none
+    )
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )

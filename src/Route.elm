@@ -1,5 +1,6 @@
 module Route exposing (Route(..), route)
 
+import Dict
 import Route.Edit
 import Route.Show
 import Url exposing (Url)
@@ -12,14 +13,14 @@ type Route
     | Edit Route.Edit.Flags
 
 
-router : Parser (Route -> a) a
-router =
-    oneOf
-        [ map Show (s "text2link" <?> Query.string "text")
-        , map (Edit ()) (s "text2link" </> s "edit")
-        ]
+text : Url -> Maybe String
+text url =
+    parse
+        (top <?> Query.string "text")
+        { url | path = "" }
+        |> Maybe.withDefault Nothing
 
 
 route : Url -> Route
 route url =
-    parse router url |> Maybe.withDefault (Edit ())
+    text url |> Maybe.map Show |> Maybe.withDefault (Edit ())
