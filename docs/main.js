@@ -8384,13 +8384,15 @@ var $author$project$Compress$decode = function (compressed) {
 						A3($elm$core$String$replace, '-', '+', compressed))))));
 };
 var $author$project$Route$Show$init = F3(
-	function (_v0, _v1, flags) {
+	function (url, key, flags) {
 		return _Utils_Tuple2(
 			{
+				ad: key,
 				Z: A2(
 					$elm$core$Maybe$withDefault,
 					'',
-					$author$project$Compress$decode(flags))
+					$author$project$Compress$decode(flags)),
+				am: url
 			},
 			$elm$core$Platform$Cmd$none);
 	});
@@ -8659,12 +8661,11 @@ var $author$project$Main$init = F3(
 	});
 var $elm$core$Platform$Sub$batch = _Platform_batch;
 var $elm$core$Platform$Sub$none = $elm$core$Platform$Sub$batch(_List_Nil);
-var $author$project$Main$Noop = {$: 0};
-var $author$project$Main$onUrlChange = function (_v0) {
-	return $author$project$Main$Noop;
-};
 var $author$project$Main$Go = function (a) {
 	return {$: 3, a: a};
+};
+var $author$project$Main$onUrlChange = function (url) {
+	return $author$project$Main$Go(url);
 };
 var $author$project$Main$Invoke = function (a) {
 	return {$: 1, a: a};
@@ -11595,9 +11596,25 @@ var $author$project$Route$Edit$update = F2(
 					$author$project$Route$Edit$loadTwitterSharing(model));
 		}
 	});
+var $author$project$Route$Show$editorUrl = function (url) {
+	return $elm$url$Url$toString(
+		_Utils_update(
+			url,
+			{bf: $elm$core$Maybe$Nothing}));
+};
+var $elm$browser$Browser$Navigation$pushUrl = _Browser_pushUrl;
 var $author$project$Route$Show$update = F2(
-	function (_v0, model) {
-		return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
+	function (msg, model) {
+		if (!msg) {
+			return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
+		} else {
+			return _Utils_Tuple2(
+				model,
+				A2(
+					$elm$browser$Browser$Navigation$pushUrl,
+					model.ad,
+					$author$project$Route$Show$editorUrl(model.am)));
+		}
 	});
 var $author$project$Main$updateRoute = F2(
 	function (msg, model) {
@@ -11810,14 +11827,7 @@ var $author$project$Route$Edit$view = function (_v0) {
 					]))
 			]));
 };
-var $elm$html$Html$Attributes$action = function (uri) {
-	return A2(
-		$elm$html$Html$Attributes$stringProperty,
-		'action',
-		_VirtualDom_noJavaScriptUri(uri));
-};
-var $elm$html$Html$form = _VirtualDom_node('form');
-var $elm$html$Html$Attributes$type_ = $elm$html$Html$Attributes$stringProperty('type');
+var $author$project$Route$Show$Edit = 1;
 var $author$project$Route$Show$view = function (model) {
 	return A2(
 		$elm$html$Html$div,
@@ -11844,24 +11854,15 @@ var $author$project$Route$Show$view = function (model) {
 						_List_fromArray(
 							[
 								A2(
-								$elm$html$Html$form,
+								$elm$html$Html$button,
 								_List_fromArray(
 									[
-										$elm$html$Html$Attributes$action('?')
+										$elm$html$Html$Attributes$class('button'),
+										$elm$html$Html$Events$onClick(1)
 									]),
 								_List_fromArray(
 									[
-										A2(
-										$elm$html$Html$button,
-										_List_fromArray(
-											[
-												$elm$html$Html$Attributes$class('button'),
-												$elm$html$Html$Attributes$type_('submit')
-											]),
-										_List_fromArray(
-											[
-												$elm$html$Html$text('New')
-											]))
+										$elm$html$Html$text('New')
 									]))
 							])),
 						A2(

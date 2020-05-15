@@ -133,8 +133,8 @@ onUrlRequest request =
 
 
 onUrlChange : Url -> Msg
-onUrlChange _ =
-    Noop
+onUrlChange url =
+    Go url
 
 
 fixCmd : (a -> msg) -> ( model, Cmd a ) -> ( model, Cmd msg )
