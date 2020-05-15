@@ -73,6 +73,7 @@ body {
   flex-grow: 1;
   font-family: monospace;
   font-size: 14px;
+  white-space: pre;
 }
 
 ::-webkit-input-placeholder, ::placeholder {
