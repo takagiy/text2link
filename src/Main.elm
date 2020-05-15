@@ -26,6 +26,7 @@ type Msg
     = Noop
     | Invoke (Cmd Msg)
     | RoutedMsg RoutedMsg
+    | Go Url
 
 
 type RoutedMsg
@@ -100,6 +101,13 @@ update msg model =
             in
             ( { model | model = newModel }, cmd )
 
+        Go url ->
+            let
+                ( m, cmd ) =
+                    initRoute url model.key (Route.route url)
+            in
+            ( { model | model = m }, cmd )
+
 
 updateRoute : RoutedMsg -> RoutedModel -> ( RoutedModel, Cmd Msg )
 updateRoute msg model =
@@ -116,16 +124,12 @@ updateRoute msg model =
 
 onUrlRequest : Browser.UrlRequest -> Msg
 onUrlRequest request =
-    let
-        urlString =
-            case request of
-                Browser.Internal url ->
-                    Url.toString url
+    case request of
+        Browser.Internal url ->
+            Go url
 
-                Browser.External str ->
-                    str
-    in
-    Invoke (Nav.load urlString)
+        Browser.External url ->
+            Invoke (Nav.load url)
 
 
 onUrlChange : Url -> Msg
