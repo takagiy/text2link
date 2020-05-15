@@ -46,7 +46,7 @@ view model =
                         [ class "button"
                         , type_ "submit"
                         ]
-                        [ text "Write" ]
+                        [ text "New" ]
                     ]
                 ]
             , div

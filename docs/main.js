@@ -11846,7 +11846,7 @@ var $author$project$Route$Show$view = function (model) {
 											]),
 										_List_fromArray(
 											[
-												$elm$html$Html$text('Write')
+												$elm$html$Html$text('New')
 											]))
 									]))
 							])),
