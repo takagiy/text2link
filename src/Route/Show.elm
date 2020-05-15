@@ -3,6 +3,7 @@ module Route.Show exposing (Flags, Model, Msg, init, update, view)
 import Browser.Navigation as Nav
 import Compress
 import Html exposing (..)
+import Url exposing (Url)
 
 
 type alias Model =
@@ -17,8 +18,8 @@ type alias Flags =
     String
 
 
-init : Nav.Key -> Flags -> ( Model, Cmd Msg )
-init _ flags =
+init : Url -> Nav.Key -> Flags -> ( Model, Cmd Msg )
+init _ _ flags =
     ( { text =
             flags |> Compress.decode |> Maybe.withDefault ""
       }

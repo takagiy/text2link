@@ -24,14 +24,14 @@ encode string =
         |> Flate.deflate
         |> Base64.fromBytes
         |> Maybe.map
-            (String.replace "+" "-" >> String.replace "/" "-" >> String.replace "=" "_")
+            (String.replace "+" "-" >> String.replace "/" "." >> String.replace "=" "_")
 
 
 decode : String -> Maybe String
 decode compressed =
     compressed
         |> String.replace "-" "+"
-        |> String.replace "-" "/"
+        |> String.replace "." "/"
         |> String.replace "_" "="
         |> Base64.toBytes
         |> Maybe.andThen Flate.inflate

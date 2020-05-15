@@ -4,13 +4,14 @@ import Browser.Navigation as Nav
 import Compress
 import Html exposing (..)
 import Html.Events exposing (..)
-import Url
+import Url exposing (Url)
 import Url.Builder as UB
 
 
 type alias Model =
     { key : Nav.Key
     , text : String
+    , url : Url
     }
 
 
@@ -24,9 +25,9 @@ type alias Flags =
     ()
 
 
-init : Nav.Key -> Flags -> ( Model, Cmd Msg )
-init key _ =
-    ( { key = key, text = "" }, Cmd.none )
+init : Url -> Nav.Key -> Flags -> ( Model, Cmd Msg )
+init url key _ =
+    ( { key = key, text = "", url = url }, Cmd.none )
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -44,12 +45,22 @@ update msg model =
 
 loadTwitterSharing : Model -> Cmd Msg
 loadTwitterSharing model =
-    Compress.encode model.text |> Maybe.map (Nav.load << twitterSharingUrl) |> Maybe.withDefault Cmd.none
+    showTextUrl model.url model.text |> Maybe.map (Nav.load << twitterSharingUrl) |> Maybe.withDefault Cmd.none
 
 
 twitterSharingUrl : String -> String
 twitterSharingUrl text =
     UB.crossOrigin "https://twitter.com" [ "intent", "tweet" ] [ UB.string "text" text ]
+
+
+showTextUrl : Url -> String -> Maybe String
+showTextUrl url text =
+    Compress.encode text
+        |> Maybe.map
+            ((\t -> [ UB.string "text" t ] |> UB.toQuery)
+                >> (\q -> { url | query = Just q })
+                >> Url.toString
+            )
 
 
 view : Model -> Html Msg
