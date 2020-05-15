@@ -11665,7 +11665,7 @@ var $author$project$Main$stylesheet = A3(
 	_List_Nil,
 	_List_fromArray(
 		[
-			$elm$html$Html$text('\nhtml { height: 100%; }\nbody { height: 100%; }\n')
+			$elm$html$Html$text('\nhtml { height: 100%; }\nbody {\n  height: 100%;\n  margin: 0;\n  padding: 0;\n}\n')
 		]));
 var $elm$virtual_dom$VirtualDom$map = _VirtualDom_map;
 var $elm$html$Html$map = $elm$virtual_dom$VirtualDom$map;

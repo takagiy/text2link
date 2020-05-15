@@ -81,7 +81,11 @@ stylesheet : Html Msg
 stylesheet =
     node "style" [] [ text """
 html { height: 100%; }
-body { height: 100%; }
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
 """ ]
 
 
