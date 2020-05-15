@@ -8681,14 +8681,62 @@ var $author$project$Main$Invoke = function (a) {
 	return {$: 1, a: a};
 };
 var $elm$browser$Browser$Navigation$load = _Browser_load;
+var $elm$url$Url$addPort = F2(
+	function (maybePort, starter) {
+		if (maybePort.$ === 1) {
+			return starter;
+		} else {
+			var port_ = maybePort.a;
+			return starter + (':' + $elm$core$String$fromInt(port_));
+		}
+	});
+var $elm$url$Url$addPrefixed = F3(
+	function (prefix, maybeSegment, starter) {
+		if (maybeSegment.$ === 1) {
+			return starter;
+		} else {
+			var segment = maybeSegment.a;
+			return _Utils_ap(
+				starter,
+				_Utils_ap(prefix, segment));
+		}
+	});
+var $elm$url$Url$toString = function (url) {
+	var http = function () {
+		var _v0 = url.aK;
+		if (!_v0) {
+			return 'http://';
+		} else {
+			return 'https://';
+		}
+	}();
+	return A3(
+		$elm$url$Url$addPrefixed,
+		'#',
+		url.au,
+		A3(
+			$elm$url$Url$addPrefixed,
+			'?',
+			url.bf,
+			_Utils_ap(
+				A2(
+					$elm$url$Url$addPort,
+					url.aH,
+					_Utils_ap(http, url.aw)),
+				url.be)));
+};
 var $author$project$Main$onUrlRequest = function (request) {
-	if (request.$ === 1) {
-		var str = request.a;
-		return $author$project$Main$Invoke(
-			$elm$browser$Browser$Navigation$load(str));
-	} else {
-		return $author$project$Main$Noop;
-	}
+	var urlString = function () {
+		if (!request.$) {
+			var url = request.a;
+			return $elm$url$Url$toString(url);
+		} else {
+			var str = request.a;
+			return str;
+		}
+	}();
+	return $author$project$Main$Invoke(
+		$elm$browser$Browser$Navigation$load(urlString));
 };
 var $folkertdev$elm_flate$Flate$Dynamic = function (a) {
 	return {$: 1, a: a};
@@ -11491,50 +11539,6 @@ var $elm$url$Url$Builder$toQuery = function (parameters) {
 			A2($elm$core$List$map, $elm$url$Url$Builder$toQueryPair, parameters));
 	}
 };
-var $elm$url$Url$addPort = F2(
-	function (maybePort, starter) {
-		if (maybePort.$ === 1) {
-			return starter;
-		} else {
-			var port_ = maybePort.a;
-			return starter + (':' + $elm$core$String$fromInt(port_));
-		}
-	});
-var $elm$url$Url$addPrefixed = F3(
-	function (prefix, maybeSegment, starter) {
-		if (maybeSegment.$ === 1) {
-			return starter;
-		} else {
-			var segment = maybeSegment.a;
-			return _Utils_ap(
-				starter,
-				_Utils_ap(prefix, segment));
-		}
-	});
-var $elm$url$Url$toString = function (url) {
-	var http = function () {
-		var _v0 = url.aK;
-		if (!_v0) {
-			return 'http://';
-		} else {
-			return 'https://';
-		}
-	}();
-	return A3(
-		$elm$url$Url$addPrefixed,
-		'#',
-		url.au,
-		A3(
-			$elm$url$Url$addPrefixed,
-			'?',
-			url.bf,
-			_Utils_ap(
-				A2(
-					$elm$url$Url$addPort,
-					url.aH,
-					_Utils_ap(http, url.aw)),
-				url.be)));
-};
 var $author$project$Route$Edit$showTextUrl = F2(
 	function (url, text) {
 		return A2(
@@ -11542,11 +11546,14 @@ var $author$project$Route$Edit$showTextUrl = F2(
 			A2(
 				$elm$core$Basics$composeR,
 				function (t) {
-					return $elm$url$Url$Builder$toQuery(
-						_List_fromArray(
-							[
-								A2($elm$url$Url$Builder$string, 'text', t)
-							]));
+					return A2(
+						$elm$core$String$dropLeft,
+						1,
+						$elm$url$Url$Builder$toQuery(
+							_List_fromArray(
+								[
+									A2($elm$url$Url$Builder$string, 'text', t)
+								])));
 				},
 				A2(
 					$elm$core$Basics$composeR,
@@ -11659,6 +11666,21 @@ var $author$project$Main$update = F2(
 					cmd);
 		}
 	});
+var $elm$virtual_dom$VirtualDom$node = function (tag) {
+	return _VirtualDom_node(
+		_VirtualDom_noScript(tag));
+};
+var $elm$html$Html$node = $elm$virtual_dom$VirtualDom$node;
+var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
+var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
+var $author$project$Main$stylesheet = A3(
+	$elm$html$Html$node,
+	'style',
+	_List_Nil,
+	_List_fromArray(
+		[
+			$elm$html$Html$text('\nhtml { height: 100%; }\nbody { height: 100%; }\n')
+		]));
 var $elm$virtual_dom$VirtualDom$map = _VirtualDom_map;
 var $elm$html$Html$map = $elm$virtual_dom$VirtualDom$map;
 var $author$project$Route$Edit$Edit = function (a) {
@@ -11667,6 +11689,17 @@ var $author$project$Route$Edit$Edit = function (a) {
 var $author$project$Route$Edit$Tweet = {$: 2};
 var $elm$html$Html$button = _VirtualDom_node('button');
 var $elm$html$Html$div = _VirtualDom_node('div');
+var $elm$json$Json$Encode$string = _Json_wrap;
+var $elm$html$Html$Attributes$stringProperty = F2(
+	function (key, string) {
+		return A2(
+			_VirtualDom_property,
+			key,
+			$elm$json$Json$Encode$string(string));
+	});
+var $elm$html$Html$Attributes$for = $elm$html$Html$Attributes$stringProperty('htmlFor');
+var $elm$html$Html$Attributes$id = $elm$html$Html$Attributes$stringProperty('id');
+var $elm$html$Html$label = _VirtualDom_node('label');
 var $elm$virtual_dom$VirtualDom$Normal = function (a) {
 	return {$: 0, a: a};
 };
@@ -11717,42 +11750,141 @@ var $elm$html$Html$Events$onInput = function (tagger) {
 			$elm$html$Html$Events$alwaysStop,
 			A2($elm$json$Json$Decode$map, tagger, $elm$html$Html$Events$targetValue)));
 };
-var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
-var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
+var $elm$virtual_dom$VirtualDom$style = _VirtualDom_style;
+var $elm$html$Html$Attributes$style = $elm$virtual_dom$VirtualDom$style;
 var $elm$html$Html$textarea = _VirtualDom_node('textarea');
 var $author$project$Route$Edit$view = function (_v0) {
+	return A2(
+		$elm$html$Html$div,
+		_List_fromArray(
+			[
+				A2($elm$html$Html$Attributes$style, 'display', 'flex'),
+				A2($elm$html$Html$Attributes$style, 'flex-direction', 'row'),
+				A2($elm$html$Html$Attributes$style, 'justify-content', 'center'),
+				A2($elm$html$Html$Attributes$style, 'height', '100%')
+			]),
+		_List_fromArray(
+			[
+				A2(
+				$elm$html$Html$div,
+				_List_fromArray(
+					[
+						A2($elm$html$Html$Attributes$style, 'display', 'flex'),
+						A2($elm$html$Html$Attributes$style, 'flex-direction', 'column'),
+						A2($elm$html$Html$Attributes$style, 'height', '100%'),
+						A2($elm$html$Html$Attributes$style, 'flex-basis', '60%')
+					]),
+				_List_fromArray(
+					[
+						A2(
+						$elm$html$Html$div,
+						_List_fromArray(
+							[
+								A2($elm$html$Html$Attributes$style, 'display', 'flex'),
+								A2($elm$html$Html$Attributes$style, 'flex-direction', 'row'),
+								A2($elm$html$Html$Attributes$style, 'justify-content', 'flex-end'),
+								A2($elm$html$Html$Attributes$style, 'padding', '5px 10px')
+							]),
+						_List_fromArray(
+							[
+								A2(
+								$elm$html$Html$button,
+								_List_fromArray(
+									[
+										A2($elm$html$Html$Attributes$style, 'appearance', 'none'),
+										A2($elm$html$Html$Attributes$style, 'border', 'solid'),
+										A2($elm$html$Html$Attributes$style, 'height', '30px'),
+										A2($elm$html$Html$Attributes$style, 'width', '80px'),
+										A2($elm$html$Html$Attributes$style, 'border-radius', '15px'),
+										A2($elm$html$Html$Attributes$style, 'border-width', '2px'),
+										A2($elm$html$Html$Attributes$style, 'background', 'none'),
+										A2($elm$html$Html$Attributes$style, 'letter-spacing', '1px'),
+										A2($elm$html$Html$Attributes$style, 'font-family', 'sans-serif'),
+										A2($elm$html$Html$Attributes$style, 'font-weight', 'bold'),
+										A2($elm$html$Html$Attributes$style, 'outline', 'none'),
+										$elm$html$Html$Events$onClick($author$project$Route$Edit$Tweet)
+									]),
+								_List_fromArray(
+									[
+										$elm$html$Html$text('Tweet')
+									]))
+							])),
+						A2(
+						$elm$html$Html$div,
+						_List_fromArray(
+							[
+								A2($elm$html$Html$Attributes$style, 'display', 'flex'),
+								A2($elm$html$Html$Attributes$style, 'flex-direction', 'row'),
+								A2($elm$html$Html$Attributes$style, 'flex-grow', '1'),
+								A2($elm$html$Html$Attributes$style, 'justify-content', 'center'),
+								A2($elm$html$Html$Attributes$style, 'padding', '0px 10px')
+							]),
+						_List_fromArray(
+							[
+								A2(
+								$elm$html$Html$label,
+								_List_fromArray(
+									[
+										A2($elm$html$Html$Attributes$style, 'font-family', 'monospace'),
+										$elm$html$Html$Attributes$for('text')
+									]),
+								_List_fromArray(
+									[
+										$elm$html$Html$text('>')
+									])),
+								A2(
+								$elm$html$Html$textarea,
+								_List_fromArray(
+									[
+										A2($elm$html$Html$Attributes$style, 'appearance', 'none'),
+										A2($elm$html$Html$Attributes$style, 'border', 'none'),
+										A2($elm$html$Html$Attributes$style, 'resize', 'none'),
+										A2($elm$html$Html$Attributes$style, 'outline', 'none'),
+										A2($elm$html$Html$Attributes$style, 'flex-grow', '1'),
+										$elm$html$Html$Attributes$id('text'),
+										$elm$html$Html$Events$onInput($author$project$Route$Edit$Edit)
+									]),
+								_List_Nil)
+							]))
+					]))
+			]));
+};
+var $elm$html$Html$a = _VirtualDom_node('a');
+var $elm$html$Html$Attributes$href = function (url) {
+	return A2(
+		$elm$html$Html$Attributes$stringProperty,
+		'href',
+		_VirtualDom_noJavaScriptUri(url));
+};
+var $author$project$Route$Show$view = function (model) {
 	return A2(
 		$elm$html$Html$div,
 		_List_Nil,
 		_List_fromArray(
 			[
 				A2(
-				$elm$html$Html$button,
+				$elm$html$Html$div,
+				_List_Nil,
 				_List_fromArray(
 					[
-						$elm$html$Html$Events$onClick($author$project$Route$Edit$Tweet)
-					]),
-				_List_fromArray(
-					[
-						$elm$html$Html$text('Tweet')
+						A2(
+						$elm$html$Html$a,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$href('?')
+							]),
+						_List_fromArray(
+							[
+								$elm$html$Html$text('edit')
+							]))
 					])),
 				A2(
-				$elm$html$Html$textarea,
+				$elm$html$Html$div,
+				_List_Nil,
 				_List_fromArray(
 					[
-						$elm$html$Html$Events$onInput($author$project$Route$Edit$Edit)
-					]),
-				_List_Nil)
-			]));
-};
-var $elm$html$Html$h1 = _VirtualDom_node('h1');
-var $author$project$Route$Show$view = function (model) {
-	return A2(
-		$elm$html$Html$h1,
-		_List_Nil,
-		_List_fromArray(
-			[
-				$elm$html$Html$text(model.Z)
+						$elm$html$Html$text(model.Z)
+					]))
 			]));
 };
 var $author$project$Main$viewRoute = function (model) {
@@ -11775,6 +11907,7 @@ var $author$project$Main$view = function (model) {
 	return {
 		aW: _List_fromArray(
 			[
+				$author$project$Main$stylesheet,
 				$author$project$Main$viewRoute(model)
 			]),
 		bl: 'text2link'

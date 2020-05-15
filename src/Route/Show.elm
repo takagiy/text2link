@@ -3,6 +3,7 @@ module Route.Show exposing (Flags, Model, Msg, init, update, view)
 import Browser.Navigation as Nav
 import Compress
 import Html exposing (..)
+import Html.Attributes exposing (..)
 import Url exposing (Url)
 
 
@@ -34,4 +35,7 @@ update _ model =
 
 view : Model -> Html Msg
 view model =
-    h1 [] [ text model.text ]
+    div []
+        [ div [] [ a [ href "?" ] [ text "edit" ] ]
+        , div [] [ text model.text ]
+        ]
