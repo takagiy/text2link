@@ -65,7 +65,7 @@ showTextUrl url text =
 
 
 view : Model -> Html Msg
-view _ =
+view model =
     div
         [ style "display" "flex"
         , style "flex-direction" "row"
@@ -109,7 +109,15 @@ view _ =
                 ]
                 [ label
                     [ style "font-family" "monospace"
+                    , style "font-size" "14px"
                     , for "text"
+                    , style "visibility"
+                        (if model.text == "" then
+                            "visible"
+
+                         else
+                            "hidden"
+                        )
                     ]
                     [ text ">" ]
                 , textarea
@@ -118,6 +126,9 @@ view _ =
                     , style "resize" "none"
                     , style "outline" "none"
                     , style "flex-grow" "1"
+                    , style "padding" "0px"
+                    , style "font-family" "monospace"
+                    , style "font-size" "14px"
                     , id "text"
                     , onInput Edit
                     ]
