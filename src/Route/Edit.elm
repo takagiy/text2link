@@ -88,7 +88,6 @@ view _ =
                     [ style "appearance" "none"
                     , style "border" "solid"
                     , style "height" "30px"
-                    , style "width" "80px"
                     , style "border-radius" "15px"
                     , style "border-width" "2px"
                     , style "background" "none"
@@ -96,6 +95,7 @@ view _ =
                     , style "font-family" "sans-serif"
                     , style "font-weight" "bold"
                     , style "outline" "none"
+                    , style "padding" "0px 15px"
                     , onClick Tweet
                     ]
                     [ text "Tweet" ]

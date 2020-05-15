@@ -1,11 +1,11 @@
 DIST = docs
 ELM = $(shell find src/ -name '*.elm')
-HTML = $(DIST)/index.html
+JS = $(DIST)/main.js
 
 ELM_META = elm.json
 ELM_MAIN = src/Main.elm
 
-$(HTML) : $(ELM_MAIN) $(ELM) $(ELM_META)
+$(JS) : $(ELM_MAIN) $(ELM) $(ELM_META)
 	npx elm make $< --output $@ --optimize
 
 .PHONY: clean
