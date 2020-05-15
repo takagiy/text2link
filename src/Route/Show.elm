@@ -35,7 +35,23 @@ update _ model =
 
 view : Model -> Html Msg
 view model =
-    div []
-        [ div [] [ a [ href "?" ] [ text "edit" ] ]
-        , div [] [ text model.text ]
+    div
+        [ class "container-screen" ]
+        [ div
+            [ class "container-main" ]
+            [ div
+                [ class "container-header" ]
+                [ Html.form [ action "?" ]
+                    [ button
+                        [ class "button"
+                        , type_ "submit"
+                        ]
+                        [ text "Write" ]
+                    ]
+                ]
+            , div
+                [ class "container-text" ]
+                [ div [ class "text" ] [ text model.text ]
+                ]
+            ]
         ]
