@@ -5427,7 +5427,7 @@ var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
 var $author$project$Route$Edit$init = F3(
 	function (url, key, _v0) {
 		return _Utils_Tuple2(
-			{az: key, R: '', al: url},
+			{az: key, Z: '', al: url},
 			$elm$core$Platform$Cmd$none);
 	});
 var $elm$core$Maybe$andThen = F2(
@@ -6731,7 +6731,7 @@ var $folkertdev$elm_flate$Inflate$Internal$buildTree = F3(
 			0,
 			A2($elm$core$Array$repeat, num, 0),
 			offsetsDict.b);
-		return {I: newTable, T: translation2};
+		return {I: newTable, S: translation2};
 	});
 var $folkertdev$elm_flate$Inflate$Internal$clcIndices = _List_fromArray(
 	[16, 17, 18, 0, 8, 7, 9, 6, 10, 5, 11, 4, 12, 3, 13, 2, 14, 1, 15]);
@@ -7136,7 +7136,7 @@ var $folkertdev$elm_flate$Inflate$Internal$decodeSymbol = F2(
 				var tag = _v1.v;
 				var bitsAvailable = _v1.d;
 				var sum = _v1.ak;
-				var _v2 = A2($elm$core$Array$get, sum + cur, tree.T);
+				var _v2 = A2($elm$core$Array$get, sum + cur, tree.S);
 				if (_v2.$ === 1) {
 					return $elm$core$Result$Err('Index into trans tree out of bounds');
 				} else {
@@ -8072,7 +8072,7 @@ var $elm$core$Array$fromList = function (list) {
 var $folkertdev$elm_flate$Inflate$Internal$sdtree = {
 	I: _List_fromArray(
 		[0, 0, 0, 0, 0, 32, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]),
-	T: A2(
+	S: A2(
 		$elm$core$Array$append,
 		$elm$core$Array$fromList(
 			_List_fromArray(
@@ -8082,7 +8082,7 @@ var $folkertdev$elm_flate$Inflate$Internal$sdtree = {
 var $folkertdev$elm_flate$Inflate$Internal$sltree = {
 	I: _List_fromArray(
 		[0, 0, 0, 0, 0, 0, 0, 24, 152, 112, 0, 0, 0, 0, 0, 0]),
-	T: $elm$core$Array$fromList(
+	S: $elm$core$Array$fromList(
 		_List_fromArray(
 			[256, 257, 258, 259, 260, 261, 262, 263, 264, 265, 266, 267, 268, 269, 270, 271, 272, 273, 274, 275, 276, 277, 278, 279, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 133, 134, 135, 136, 137, 138, 139, 140, 141, 142, 143, 280, 281, 282, 283, 284, 285, 286, 287, 144, 145, 146, 147, 148, 149, 150, 151, 152, 153, 154, 155, 156, 157, 158, 159, 160, 161, 162, 163, 164, 165, 166, 167, 168, 169, 170, 171, 172, 173, 174, 175, 176, 177, 178, 179, 180, 181, 182, 183, 184, 185, 186, 187, 188, 189, 190, 191, 192, 193, 194, 195, 196, 197, 198, 199, 200, 201, 202, 203, 204, 205, 206, 207, 208, 209, 210, 211, 212, 213, 214, 215, 216, 217, 218, 219, 220, 221, 222, 223, 224, 225, 226, 227, 228, 229, 230, 231, 232, 233, 234, 235, 236, 237, 238, 239, 240, 241, 242, 243, 244, 245, 246, 247, 248, 249, 250, 251, 252, 253, 254, 255]))
 };
@@ -8387,7 +8387,7 @@ var $author$project$Route$Show$init = F3(
 	function (_v0, _v1, flags) {
 		return _Utils_Tuple2(
 			{
-				R: A2(
+				Z: A2(
 					$elm$core$Maybe$withDefault,
 					'',
 					$author$project$Compress$decode(flags))
@@ -11399,16 +11399,16 @@ var $elm$bytes$Bytes$Decode$map3 = F4(
 			});
 	});
 var $danfishgold$base64_bytes$Decode$loopHelp = function (_v0) {
-	var remaining = _v0.Y;
-	var string = _v0.Z;
+	var remaining = _v0.X;
+	var string = _v0.Y;
 	if (remaining >= 18) {
 		return A2(
 			$elm$bytes$Bytes$Decode$map,
 			function (result) {
 				return $elm$bytes$Bytes$Decode$Loop(
 					{
-						Y: remaining - 18,
-						Z: _Utils_ap(string, result)
+						X: remaining - 18,
+						Y: _Utils_ap(string, result)
 					});
 			},
 			$danfishgold$base64_bytes$Decode$decode18Bytes);
@@ -11419,8 +11419,8 @@ var $danfishgold$base64_bytes$Decode$loopHelp = function (_v0) {
 					var combined = ((a << 16) | (b << 8)) | c;
 					return $elm$bytes$Bytes$Decode$Loop(
 						{
-							Y: remaining - 3,
-							Z: _Utils_ap(
+							X: remaining - 3,
+							Y: _Utils_ap(
 								string,
 								A2($danfishgold$base64_bytes$Decode$bitsToChars, combined, 0))
 						});
@@ -11459,7 +11459,7 @@ var $danfishgold$base64_bytes$Decode$loopHelp = function (_v0) {
 var $danfishgold$base64_bytes$Decode$decoder = function (width) {
 	return A2(
 		$elm$bytes$Bytes$Decode$loop,
-		{Y: width, Z: ''},
+		{X: width, Y: ''},
 		$danfishgold$base64_bytes$Decode$loopHelp);
 };
 var $danfishgold$base64_bytes$Decode$fromBytes = function (bytes) {
@@ -11575,7 +11575,7 @@ var $author$project$Route$Edit$loadTwitterSharing = function (model) {
 		A2(
 			$elm$core$Maybe$map,
 			A2($elm$core$Basics$composeL, $elm$browser$Browser$Navigation$load, $author$project$Route$Edit$twitterSharingUrl),
-			A2($author$project$Route$Edit$showTextUrl, model.al, model.R)));
+			A2($author$project$Route$Edit$showTextUrl, model.al, model.Z)));
 };
 var $author$project$Route$Edit$update = F2(
 	function (msg, model) {
@@ -11587,7 +11587,7 @@ var $author$project$Route$Edit$update = F2(
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{R: text}),
+						{Z: text}),
 					$elm$core$Platform$Cmd$none);
 			default:
 				return _Utils_Tuple2(
@@ -11652,21 +11652,6 @@ var $author$project$Main$update = F2(
 					cmd);
 		}
 	});
-var $elm$virtual_dom$VirtualDom$node = function (tag) {
-	return _VirtualDom_node(
-		_VirtualDom_noScript(tag));
-};
-var $elm$html$Html$node = $elm$virtual_dom$VirtualDom$node;
-var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
-var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
-var $author$project$Main$stylesheet = A3(
-	$elm$html$Html$node,
-	'style',
-	_List_Nil,
-	_List_fromArray(
-		[
-			$elm$html$Html$text('\nhtml { height: 100%; }\nbody {\n  height: 100%;\n  margin: 0;\n  padding: 0;\n}\n')
-		]));
 var $elm$virtual_dom$VirtualDom$map = _VirtualDom_map;
 var $elm$html$Html$map = $elm$virtual_dom$VirtualDom$map;
 var $author$project$Route$Edit$Edit = function (a) {
@@ -11674,7 +11659,6 @@ var $author$project$Route$Edit$Edit = function (a) {
 };
 var $author$project$Route$Edit$Tweet = {$: 2};
 var $elm$html$Html$button = _VirtualDom_node('button');
-var $elm$html$Html$div = _VirtualDom_node('div');
 var $elm$json$Json$Encode$string = _Json_wrap;
 var $elm$html$Html$Attributes$stringProperty = F2(
 	function (key, string) {
@@ -11683,6 +11667,8 @@ var $elm$html$Html$Attributes$stringProperty = F2(
 			key,
 			$elm$json$Json$Encode$string(string));
 	});
+var $elm$html$Html$Attributes$class = $elm$html$Html$Attributes$stringProperty('className');
+var $elm$html$Html$div = _VirtualDom_node('div');
 var $elm$html$Html$Attributes$for = $elm$html$Html$Attributes$stringProperty('htmlFor');
 var $elm$html$Html$Attributes$id = $elm$html$Html$Attributes$stringProperty('id');
 var $elm$html$Html$label = _VirtualDom_node('label');
@@ -11736,18 +11722,16 @@ var $elm$html$Html$Events$onInput = function (tagger) {
 			$elm$html$Html$Events$alwaysStop,
 			A2($elm$json$Json$Decode$map, tagger, $elm$html$Html$Events$targetValue)));
 };
-var $elm$virtual_dom$VirtualDom$style = _VirtualDom_style;
-var $elm$html$Html$Attributes$style = $elm$virtual_dom$VirtualDom$style;
+var $elm$html$Html$Attributes$placeholder = $elm$html$Html$Attributes$stringProperty('placeholder');
+var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
+var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
 var $elm$html$Html$textarea = _VirtualDom_node('textarea');
-var $author$project$Route$Edit$view = function (model) {
+var $author$project$Route$Edit$view = function (_v0) {
 	return A2(
 		$elm$html$Html$div,
 		_List_fromArray(
 			[
-				A2($elm$html$Html$Attributes$style, 'display', 'flex'),
-				A2($elm$html$Html$Attributes$style, 'flex-direction', 'row'),
-				A2($elm$html$Html$Attributes$style, 'justify-content', 'center'),
-				A2($elm$html$Html$Attributes$style, 'height', '100%')
+				$elm$html$Html$Attributes$class('container-screen')
 			]),
 		_List_fromArray(
 			[
@@ -11755,10 +11739,7 @@ var $author$project$Route$Edit$view = function (model) {
 				$elm$html$Html$div,
 				_List_fromArray(
 					[
-						A2($elm$html$Html$Attributes$style, 'display', 'flex'),
-						A2($elm$html$Html$Attributes$style, 'flex-direction', 'column'),
-						A2($elm$html$Html$Attributes$style, 'height', '100%'),
-						A2($elm$html$Html$Attributes$style, 'flex-basis', '60%')
+						$elm$html$Html$Attributes$class('container-main')
 					]),
 				_List_fromArray(
 					[
@@ -11766,10 +11747,7 @@ var $author$project$Route$Edit$view = function (model) {
 						$elm$html$Html$div,
 						_List_fromArray(
 							[
-								A2($elm$html$Html$Attributes$style, 'display', 'flex'),
-								A2($elm$html$Html$Attributes$style, 'flex-direction', 'row'),
-								A2($elm$html$Html$Attributes$style, 'justify-content', 'flex-end'),
-								A2($elm$html$Html$Attributes$style, 'padding', '5px 10px')
+								$elm$html$Html$Attributes$class('container-header')
 							]),
 						_List_fromArray(
 							[
@@ -11777,17 +11755,7 @@ var $author$project$Route$Edit$view = function (model) {
 								$elm$html$Html$button,
 								_List_fromArray(
 									[
-										A2($elm$html$Html$Attributes$style, 'appearance', 'none'),
-										A2($elm$html$Html$Attributes$style, 'border', 'solid'),
-										A2($elm$html$Html$Attributes$style, 'height', '30px'),
-										A2($elm$html$Html$Attributes$style, 'border-radius', '15px'),
-										A2($elm$html$Html$Attributes$style, 'border-width', '2px'),
-										A2($elm$html$Html$Attributes$style, 'background', 'none'),
-										A2($elm$html$Html$Attributes$style, 'letter-spacing', '1px'),
-										A2($elm$html$Html$Attributes$style, 'font-family', 'sans-serif'),
-										A2($elm$html$Html$Attributes$style, 'font-weight', 'bold'),
-										A2($elm$html$Html$Attributes$style, 'outline', 'none'),
-										A2($elm$html$Html$Attributes$style, 'padding', '0px 15px'),
+										$elm$html$Html$Attributes$class('button'),
 										$elm$html$Html$Events$onClick($author$project$Route$Edit$Tweet)
 									]),
 								_List_fromArray(
@@ -11799,46 +11767,31 @@ var $author$project$Route$Edit$view = function (model) {
 						$elm$html$Html$div,
 						_List_fromArray(
 							[
-								A2($elm$html$Html$Attributes$style, 'display', 'flex'),
-								A2($elm$html$Html$Attributes$style, 'flex-direction', 'row'),
-								A2($elm$html$Html$Attributes$style, 'flex-grow', '1'),
-								A2($elm$html$Html$Attributes$style, 'justify-content', 'center'),
-								A2($elm$html$Html$Attributes$style, 'padding', '0px 10px')
+								$elm$html$Html$Attributes$class('container-text')
 							]),
 						_List_fromArray(
 							[
 								A2(
+								$elm$html$Html$textarea,
+								_List_fromArray(
+									[
+										$elm$html$Html$Attributes$class('text'),
+										$elm$html$Html$Attributes$id('text'),
+										$elm$html$Html$Events$onInput($author$project$Route$Edit$Edit),
+										$elm$html$Html$Attributes$placeholder('_')
+									]),
+								_List_Nil),
+								A2(
 								$elm$html$Html$label,
 								_List_fromArray(
 									[
-										A2($elm$html$Html$Attributes$style, 'font-family', 'monospace'),
-										A2($elm$html$Html$Attributes$style, 'font-size', '14px'),
-										$elm$html$Html$Attributes$for('text'),
-										A2(
-										$elm$html$Html$Attributes$style,
-										'visibility',
-										(model.R === '') ? 'visible' : 'hidden')
+										$elm$html$Html$Attributes$class('label-prompt'),
+										$elm$html$Html$Attributes$for('text')
 									]),
 								_List_fromArray(
 									[
 										$elm$html$Html$text('>')
-									])),
-								A2(
-								$elm$html$Html$textarea,
-								_List_fromArray(
-									[
-										A2($elm$html$Html$Attributes$style, 'appearance', 'none'),
-										A2($elm$html$Html$Attributes$style, 'border', 'none'),
-										A2($elm$html$Html$Attributes$style, 'resize', 'none'),
-										A2($elm$html$Html$Attributes$style, 'outline', 'none'),
-										A2($elm$html$Html$Attributes$style, 'flex-grow', '1'),
-										A2($elm$html$Html$Attributes$style, 'padding', '0px'),
-										A2($elm$html$Html$Attributes$style, 'font-family', 'monospace'),
-										A2($elm$html$Html$Attributes$style, 'font-size', '14px'),
-										$elm$html$Html$Attributes$id('text'),
-										$elm$html$Html$Events$onInput($author$project$Route$Edit$Edit)
-									]),
-								_List_Nil)
+									]))
 							]))
 					]))
 			]));
@@ -11877,7 +11830,7 @@ var $author$project$Route$Show$view = function (model) {
 				_List_Nil,
 				_List_fromArray(
 					[
-						$elm$html$Html$text(model.R)
+						$elm$html$Html$text(model.Z)
 					]))
 			]));
 };
@@ -11901,7 +11854,6 @@ var $author$project$Main$view = function (model) {
 	return {
 		aW: _List_fromArray(
 			[
-				$author$project$Main$stylesheet,
 				$author$project$Main$viewRoute(model)
 			]),
 		bl: 'text2link'

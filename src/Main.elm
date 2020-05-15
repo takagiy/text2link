@@ -70,23 +70,8 @@ initRoute url key route =
 view : Model -> Browser.Document Msg
 view model =
     { title = "text2link"
-    , body =
-        [ stylesheet
-        , viewRoute model
-        ]
+    , body = [ viewRoute model ]
     }
-
-
-stylesheet : Html Msg
-stylesheet =
-    node "style" [] [ text """
-html { height: 100%; }
-body {
-  height: 100%;
-  margin: 0;
-  padding: 0;
-}
-""" ]
 
 
 viewRoute : Model -> Html Msg

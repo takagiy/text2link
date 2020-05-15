@@ -1,0 +1,83 @@
+html {
+  height: 100%;
+}
+
+body {
+  height: 100%;
+  margin: 0px;
+  padding: 0px;
+}
+
+.container-screen {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  height: 100%;
+}
+
+.container-main {
+  display: flex;
+  flex-direction: column;
+  flex-basis: 60%;
+  height: 100%;
+}
+
+.container-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  padding: 10px;
+}
+
+.button {
+  height: 30px;
+  padding: 0px 15px;
+  border: solid;
+  border-radius: 15px;
+  border-width: 2px;
+  background: none;
+  letter-spacing: 1px;
+  font-family: sans-serif;
+  font-weight: bold;
+  appearance: none;
+  outline: none;
+}
+
+.container-text {
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: center;
+  flex-grow: 1;
+  padding: 0px 10px;
+}
+
+.label-prompt {
+  font-family: monospace;
+  font-size: 14px;
+}
+
+.text:placeholder-shown + .label-prompt {
+  visibility: visible
+}
+
+.text:not(:placeholder-shown) + .label-prompt {
+  visibility: hidden
+}
+
+.text {
+  padding: 0px;
+  appearance: none;
+  resize: none;
+  outline: none;
+  border: none;
+  flex-grow: 1;
+  font-family: monospace;
+  font-size: 14px;
+}
+
+::-webkit-input-placeholder, ::placeholder {
+  color: white;
+}
+.text::-moz-placeholder {
+  color: white;
+}

@@ -65,74 +65,33 @@ showTextUrl url text =
 
 
 view : Model -> Html Msg
-view model =
+view _ =
     div
-        [ style "display" "flex"
-        , style "flex-direction" "row"
-        , style "justify-content" "center"
-        , style "height" "100%"
-        ]
+        [ class "container-screen" ]
         [ div
-            [ style "display" "flex"
-            , style "flex-direction" "column"
-            , style "height" "100%"
-            , style "flex-basis" "60%"
-            ]
+            [ class "container-main" ]
             [ div
-                [ style "display" "flex"
-                , style "flex-direction" "row"
-                , style "justify-content" "flex-end"
-                , style "padding" "5px 10px"
-                ]
+                [ class "container-header" ]
                 [ button
-                    [ style "appearance" "none"
-                    , style "border" "solid"
-                    , style "height" "30px"
-                    , style "border-radius" "15px"
-                    , style "border-width" "2px"
-                    , style "background" "none"
-                    , style "letter-spacing" "1px"
-                    , style "font-family" "sans-serif"
-                    , style "font-weight" "bold"
-                    , style "outline" "none"
-                    , style "padding" "0px 15px"
+                    [ class "button"
                     , onClick Tweet
                     ]
                     [ text "Tweet" ]
                 ]
             , div
-                [ style "display" "flex"
-                , style "flex-direction" "row"
-                , style "flex-grow" "1"
-                , style "justify-content" "center"
-                , style "padding" "0px 10px"
-                ]
-                [ label
-                    [ style "font-family" "monospace"
-                    , style "font-size" "14px"
-                    , for "text"
-                    , style "visibility"
-                        (if model.text == "" then
-                            "visible"
-
-                         else
-                            "hidden"
-                        )
-                    ]
-                    [ text ">" ]
-                , textarea
-                    [ style "appearance" "none"
-                    , style "border" "none"
-                    , style "resize" "none"
-                    , style "outline" "none"
-                    , style "flex-grow" "1"
-                    , style "padding" "0px"
-                    , style "font-family" "monospace"
-                    , style "font-size" "14px"
+                [ class "container-text" ]
+                [ textarea
+                    [ class "text"
                     , id "text"
                     , onInput Edit
+                    , placeholder "_"
                     ]
                     []
+                , label
+                    [ class "label-prompt"
+                    , for "text"
+                    ]
+                    [ text ">" ]
                 ]
             ]
         ]
