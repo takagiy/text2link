@@ -113,7 +113,7 @@ update msg model =
                 ( m, cmd ) =
                     initRoute url model.key model.options (Route.route url)
             in
-            ( { model | model = m }, cmd )
+            ( { model | model = m, options = Nothing }, cmd )
 
 
 updateOut : OutMsg -> ( Model, Cmd Msg ) -> ( Model, Cmd Msg )
