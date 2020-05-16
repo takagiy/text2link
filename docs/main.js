@@ -8460,7 +8460,7 @@ var $author$project$Compress$posixDecoder = A2(
 	$elm$bytes$Bytes$Decode$map,
 	A2(
 		$elm$core$Basics$composeR,
-		$elm$core$Basics$mul(600000),
+		$elm$core$Basics$mul(60000),
 		$elm$time$Time$millisToPosix),
 	$elm$bytes$Bytes$Decode$unsignedInt32(1));
 var $elm$bytes$Bytes$Decode$string = function (n) {
@@ -11673,7 +11673,7 @@ var $author$project$Compress$posixEncoder = function (date) {
 	return A2(
 		$elm$bytes$Bytes$Encode$unsignedInt32,
 		1,
-		($elm$time$Time$posixToMillis(date) / 600000) | 0);
+		($elm$time$Time$posixToMillis(date) / 60000) | 0);
 };
 var $elm$bytes$Bytes$Encode$Utf8 = F2(
 	function (a, b) {
