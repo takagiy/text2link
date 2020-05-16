@@ -42,12 +42,12 @@ decodeWith decoder compressed =
 
 posixEncoder : Posix -> BE.Encoder
 posixEncoder date =
-    Time.posixToMillis date // 600000 |> BE.unsignedInt32 Bytes.BE
+    Time.posixToMillis date // 60000 |> BE.unsignedInt32 Bytes.BE
 
 
 posixDecoder : BD.Decoder Posix
 posixDecoder =
-    BD.unsignedInt32 Bytes.BE |> BD.map ((*) 600000 >> Time.millisToPosix)
+    BD.unsignedInt32 Bytes.BE |> BD.map ((*) 60000 >> Time.millisToPosix)
 
 
 packedEncoder : ( Posix, String ) -> BE.Encoder
