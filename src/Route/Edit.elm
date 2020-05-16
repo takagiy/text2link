@@ -1,10 +1,11 @@
-module Route.Edit exposing (Flags, Model, Msg, init, update, view)
+module Route.Edit exposing (Flags, Model, Msg, Options, init, update, view)
 
 import Browser.Navigation as Nav
 import Compress
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
+import OutMsg exposing (OutMsg)
 import Url exposing (Url)
 import Url.Builder as UB
 
@@ -12,6 +13,7 @@ import Url.Builder as UB
 type alias Model =
     { key : Nav.Key
     , text : String
+    , defaultText : Maybe String
     , url : Url
     }
 
@@ -26,22 +28,26 @@ type alias Flags =
     ()
 
 
-init : Url -> Nav.Key -> Flags -> ( Model, Cmd Msg )
-init url key _ =
-    ( { key = key, text = "", url = url }, Cmd.none )
+type alias Options =
+    Maybe String
 
 
-update : Msg -> Model -> ( Model, Cmd Msg )
+init : Url -> Nav.Key -> Flags -> Options -> ( Model, Cmd Msg )
+init url key _ options =
+    ( { key = key, text = options |> Maybe.withDefault "", url = url, defaultText = options }, Cmd.none )
+
+
+update : Msg -> Model -> ( Model, Cmd Msg, OutMsg )
 update msg model =
     case msg of
         Noop ->
-            ( model, Cmd.none )
+            ( model, Cmd.none, OutMsg.Noop )
 
         Edit text ->
-            ( { model | text = text }, Cmd.none )
+            ( { model | text = text }, Cmd.none, OutMsg.Noop )
 
         Tweet ->
-            ( model, loadTwitterSharing model )
+            ( model, loadTwitterSharing model, OutMsg.Noop )
 
 
 loadTwitterSharing : Model -> Cmd Msg
@@ -65,7 +71,7 @@ showTextUrl url text =
 
 
 view : Model -> Html Msg
-view _ =
+view model =
     div
         [ class "container-screen" ]
         [ div
@@ -86,7 +92,8 @@ view _ =
                     , onInput Edit
                     , placeholder "_"
                     ]
-                    []
+                    [ text (Maybe.withDefault "" model.defaultText)
+                    ]
                 , label
                     [ class "label-prompt"
                     , for "text"

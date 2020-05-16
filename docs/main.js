@@ -784,11 +784,11 @@ function _Debug_crash_UNUSED(identifier, fact1, fact2, fact3, fact4)
 
 function _Debug_regionToString(region)
 {
-	if (region.aj.P === region.as.P)
+	if (region.al.P === region.au.P)
 	{
-		return 'on line ' + region.aj.P;
+		return 'on line ' + region.al.P;
 	}
-	return 'on lines ' + region.aj.P + ' through ' + region.as.P;
+	return 'on lines ' + region.al.P + ' through ' + region.au.P;
 }
 
 
@@ -1857,9 +1857,9 @@ var _Platform_worker = F4(function(impl, flagDecoder, debugMetadata, args)
 	return _Platform_initialize(
 		flagDecoder,
 		args,
-		impl.a6,
+		impl.a8,
+		impl.bo,
 		impl.bm,
-		impl.bk,
 		function() { return function() {} }
 	);
 });
@@ -2705,8 +2705,8 @@ var _VirtualDom_mapEventRecord = F2(function(func, record)
 {
 	return {
 		y: func(record.y),
-		ak: record.ak,
-		ag: record.ag
+		am: record.am,
+		ai: record.ai
 	}
 });
 
@@ -2975,10 +2975,10 @@ function _VirtualDom_makeCallback(eventNode, initialHandler)
 
 		var value = result.a;
 		var message = !tag ? value : tag < 3 ? value.a : value.y;
-		var stopPropagation = tag == 1 ? value.b : tag == 3 && value.ak;
+		var stopPropagation = tag == 1 ? value.b : tag == 3 && value.am;
 		var currentEventNode = (
 			stopPropagation && event.stopPropagation(),
-			(tag == 2 ? value.b : tag == 3 && value.ag) && event.preventDefault(),
+			(tag == 2 ? value.b : tag == 3 && value.ai) && event.preventDefault(),
 			eventNode
 		);
 		var tagger;
@@ -3928,11 +3928,11 @@ var _Browser_element = _Debugger_element || F4(function(impl, flagDecoder, debug
 	return _Platform_initialize(
 		flagDecoder,
 		args,
-		impl.a6,
+		impl.a8,
+		impl.bo,
 		impl.bm,
-		impl.bk,
 		function(sendToApp, initialModel) {
-			var view = impl.bn;
+			var view = impl.bp;
 			/**/
 			var domNode = args['node'];
 			//*/
@@ -3964,12 +3964,12 @@ var _Browser_document = _Debugger_document || F4(function(impl, flagDecoder, deb
 	return _Platform_initialize(
 		flagDecoder,
 		args,
-		impl.a6,
+		impl.a8,
+		impl.bo,
 		impl.bm,
-		impl.bk,
 		function(sendToApp, initialModel) {
-			var divertHrefToApp = impl.ai && impl.ai(sendToApp)
-			var view = impl.bn;
+			var divertHrefToApp = impl.ak && impl.ak(sendToApp)
+			var view = impl.bp;
 			var title = _VirtualDom_doc.title;
 			var bodyNode = _VirtualDom_doc.body;
 			var currNode = _VirtualDom_virtualize(bodyNode);
@@ -3977,12 +3977,12 @@ var _Browser_document = _Debugger_document || F4(function(impl, flagDecoder, deb
 			{
 				_VirtualDom_divertHrefToApp = divertHrefToApp;
 				var doc = view(model);
-				var nextNode = _VirtualDom_node('body')(_List_Nil)(doc.aW);
+				var nextNode = _VirtualDom_node('body')(_List_Nil)(doc.aY);
 				var patches = _VirtualDom_diff(currNode, nextNode);
 				bodyNode = _VirtualDom_applyPatches(bodyNode, currNode, patches, sendToApp);
 				currNode = nextNode;
 				_VirtualDom_divertHrefToApp = 0;
-				(title !== doc.bl) && (_VirtualDom_doc.title = title = doc.bl);
+				(title !== doc.bn) && (_VirtualDom_doc.title = title = doc.bn);
 			});
 		}
 	);
@@ -4038,12 +4038,12 @@ function _Browser_makeAnimator(model, draw)
 
 function _Browser_application(impl)
 {
-	var onUrlChange = impl.bb;
-	var onUrlRequest = impl.bc;
+	var onUrlChange = impl.bd;
+	var onUrlRequest = impl.be;
 	var key = function() { key.a(onUrlChange(_Browser_getUrl())); };
 
 	return _Browser_document({
-		ai: function(sendToApp)
+		ak: function(sendToApp)
 		{
 			key.a = sendToApp;
 			_Browser_window.addEventListener('popstate', key);
@@ -4059,9 +4059,9 @@ function _Browser_application(impl)
 					var next = $elm$url$Url$fromString(href).a;
 					sendToApp(onUrlRequest(
 						(next
-							&& curr.aK === next.aK
-							&& curr.ax === next.ax
-							&& curr.aH.a === next.aH.a
+							&& curr.aM === next.aM
+							&& curr.az === next.az
+							&& curr.aJ.a === next.aJ.a
 						)
 							? $elm$browser$Browser$Internal(next)
 							: $elm$browser$Browser$External(href)
@@ -4069,13 +4069,13 @@ function _Browser_application(impl)
 				}
 			});
 		},
-		a6: function(flags)
+		a8: function(flags)
 		{
-			return A3(impl.a6, flags, _Browser_getUrl(), key);
+			return A3(impl.a8, flags, _Browser_getUrl(), key);
 		},
-		bn: impl.bn,
-		bm: impl.bm,
-		bk: impl.bk
+		bp: impl.bp,
+		bo: impl.bo,
+		bm: impl.bm
 	});
 }
 
@@ -4141,17 +4141,17 @@ var _Browser_decodeEvent = F2(function(decoder, event)
 function _Browser_visibilityInfo()
 {
 	return (typeof _VirtualDom_doc.hidden !== 'undefined')
-		? { a3: 'hidden', aY: 'visibilitychange' }
+		? { a5: 'hidden', a_: 'visibilitychange' }
 		:
 	(typeof _VirtualDom_doc.mozHidden !== 'undefined')
-		? { a3: 'mozHidden', aY: 'mozvisibilitychange' }
+		? { a5: 'mozHidden', a_: 'mozvisibilitychange' }
 		:
 	(typeof _VirtualDom_doc.msHidden !== 'undefined')
-		? { a3: 'msHidden', aY: 'msvisibilitychange' }
+		? { a5: 'msHidden', a_: 'msvisibilitychange' }
 		:
 	(typeof _VirtualDom_doc.webkitHidden !== 'undefined')
-		? { a3: 'webkitHidden', aY: 'webkitvisibilitychange' }
-		: { a3: 'hidden', aY: 'visibilitychange' };
+		? { a5: 'webkitHidden', a_: 'webkitvisibilitychange' }
+		: { a5: 'hidden', a_: 'visibilitychange' };
 }
 
 
@@ -4232,12 +4232,12 @@ var _Browser_call = F2(function(functionName, id)
 function _Browser_getViewport()
 {
 	return {
-		aN: _Browser_getScene(),
-		aQ: {
-			aS: _Browser_window.pageXOffset,
-			aT: _Browser_window.pageYOffset,
-			aR: _Browser_doc.documentElement.clientWidth,
-			aw: _Browser_doc.documentElement.clientHeight
+		aP: _Browser_getScene(),
+		aS: {
+			aU: _Browser_window.pageXOffset,
+			aV: _Browser_window.pageYOffset,
+			aT: _Browser_doc.documentElement.clientWidth,
+			ay: _Browser_doc.documentElement.clientHeight
 		}
 	};
 }
@@ -4247,8 +4247,8 @@ function _Browser_getScene()
 	var body = _Browser_doc.body;
 	var elem = _Browser_doc.documentElement;
 	return {
-		aR: Math.max(body.scrollWidth, body.offsetWidth, elem.scrollWidth, elem.offsetWidth, elem.clientWidth),
-		aw: Math.max(body.scrollHeight, body.offsetHeight, elem.scrollHeight, elem.offsetHeight, elem.clientHeight)
+		aT: Math.max(body.scrollWidth, body.offsetWidth, elem.scrollWidth, elem.offsetWidth, elem.clientWidth),
+		ay: Math.max(body.scrollHeight, body.offsetHeight, elem.scrollHeight, elem.offsetHeight, elem.clientHeight)
 	};
 }
 
@@ -4271,15 +4271,15 @@ function _Browser_getViewportOf(id)
 	return _Browser_withNode(id, function(node)
 	{
 		return {
-			aN: {
-				aR: node.scrollWidth,
-				aw: node.scrollHeight
+			aP: {
+				aT: node.scrollWidth,
+				ay: node.scrollHeight
 			},
-			aQ: {
-				aS: node.scrollLeft,
-				aT: node.scrollTop,
-				aR: node.clientWidth,
-				aw: node.clientHeight
+			aS: {
+				aU: node.scrollLeft,
+				aV: node.scrollTop,
+				aT: node.clientWidth,
+				ay: node.clientHeight
 			}
 		};
 	});
@@ -4309,18 +4309,18 @@ function _Browser_getElement(id)
 		var x = _Browser_window.pageXOffset;
 		var y = _Browser_window.pageYOffset;
 		return {
-			aN: _Browser_getScene(),
-			aQ: {
-				aS: x,
-				aT: y,
-				aR: _Browser_doc.documentElement.clientWidth,
-				aw: _Browser_doc.documentElement.clientHeight
+			aP: _Browser_getScene(),
+			aS: {
+				aU: x,
+				aV: y,
+				aT: _Browser_doc.documentElement.clientWidth,
+				ay: _Browser_doc.documentElement.clientHeight
 			},
-			a0: {
-				aS: x + rect.left,
-				aT: y + rect.top,
-				aR: rect.width,
-				aw: rect.height
+			a2: {
+				aU: x + rect.left,
+				aV: y + rect.top,
+				aT: rect.width,
+				ay: rect.height
 			}
 		};
 	});
@@ -5095,7 +5095,7 @@ var $elm$url$Url$Http = 0;
 var $elm$url$Url$Https = 1;
 var $elm$url$Url$Url = F6(
 	function (protocol, host, port_, path, query, fragment) {
-		return {av: fragment, ax: host, be: path, aH: port_, aK: protocol, bf: query};
+		return {ax: fragment, az: host, bg: path, aJ: port_, aM: protocol, bh: query};
 	});
 var $elm$core$String$contains = _String_contains;
 var $elm$core$String$length = _String_length;
@@ -5389,6 +5389,15 @@ var $author$project$Main$ShowModel = function (a) {
 var $author$project$Main$ShowMsg = function (a) {
 	return {$: 1, a: a};
 };
+var $elm$core$Maybe$andThen = F2(
+	function (callback, maybeValue) {
+		if (!maybeValue.$) {
+			var value = maybeValue.a;
+			return callback(value);
+		} else {
+			return $elm$core$Maybe$Nothing;
+		}
+	});
 var $elm$core$Basics$composeL = F3(
 	function (g, f, x) {
 		return g(
@@ -5422,22 +5431,43 @@ var $author$project$Main$fix = F3(
 			g,
 			A2($elm$core$Tuple$mapFirst, f, x));
 	});
+var $author$project$Route$getEditOptions = function (options) {
+	if (options.$ === 1) {
+		var opts = options.a;
+		return opts;
+	} else {
+		return $elm$core$Maybe$Nothing;
+	}
+};
+var $author$project$Route$getShowOptions = function (options) {
+	if (!options.$) {
+		var opts = options.a;
+		return opts;
+	} else {
+		return $elm$core$Maybe$Nothing;
+	}
+};
 var $elm$core$Platform$Cmd$batch = _Platform_batch;
 var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
-var $author$project$Route$Edit$init = F3(
-	function (url, key, _v0) {
-		return _Utils_Tuple2(
-			{ad: key, Z: '', am: url},
-			$elm$core$Platform$Cmd$none);
-	});
-var $elm$core$Maybe$andThen = F2(
-	function (callback, maybeValue) {
-		if (!maybeValue.$) {
-			var value = maybeValue.a;
-			return callback(value);
+var $elm$core$Maybe$withDefault = F2(
+	function (_default, maybe) {
+		if (!maybe.$) {
+			var value = maybe.a;
+			return value;
 		} else {
-			return $elm$core$Maybe$Nothing;
+			return _default;
 		}
+	});
+var $author$project$Route$Edit$init = F4(
+	function (url, key, _v0, options) {
+		return _Utils_Tuple2(
+			{
+				ae: options,
+				X: key,
+				aa: A2($elm$core$Maybe$withDefault, '', options),
+				ao: url
+			},
+			$elm$core$Platform$Cmd$none);
 	});
 var $elm$bytes$Bytes$Encode$getWidth = function (builder) {
 	switch (builder.$) {
@@ -6937,7 +6967,7 @@ var $folkertdev$elm_flate$Inflate$Internal$decodeSymbolInnerLoop = F5(
 		while (true) {
 			var newTag = tag >>> 1;
 			if (!table.b) {
-				return {d: bitsAvailable, ab: cur, al: sum, v: tag};
+				return {d: bitsAvailable, ad: cur, an: sum, v: tag};
 			} else {
 				var value = table.a;
 				var rest = table.b;
@@ -6956,7 +6986,7 @@ var $folkertdev$elm_flate$Inflate$Internal$decodeSymbolInnerLoop = F5(
 					sum = $temp$sum;
 					continue decodeSymbolInnerLoop;
 				} else {
-					return {d: bitsAvailable - 1, ab: newerCur, al: newSum, v: newTag};
+					return {d: bitsAvailable - 1, ad: newerCur, an: newSum, v: newTag};
 				}
 			}
 		}
@@ -7132,10 +7162,10 @@ var $folkertdev$elm_flate$Inflate$Internal$decodeSymbol = F2(
 			} else {
 				var d = _v0.a;
 				var _v1 = A5($folkertdev$elm_flate$Inflate$Internal$decodeSymbolInnerLoop, table, 0, d.v, d.d, 0);
-				var cur = _v1.ab;
+				var cur = _v1.ad;
 				var tag = _v1.v;
 				var bitsAvailable = _v1.d;
-				var sum = _v1.al;
+				var sum = _v1.an;
 				var _v2 = A2($elm$core$Array$get, sum + cur, tree.S);
 				if (_v2.$ === 1) {
 					return $elm$core$Result$Err('Index into trans tree out of bounds');
@@ -7187,15 +7217,6 @@ var $elm$core$List$tail = function (list) {
 		return $elm$core$Maybe$Nothing;
 	}
 };
-var $elm$core$Maybe$withDefault = F2(
-	function (_default, maybe) {
-		if (!maybe.$) {
-			var value = maybe.a;
-			return value;
-		} else {
-			return _default;
-		}
-	});
 var $folkertdev$elm_flate$Inflate$Internal$decodeDynamicTreeLength = F4(
 	function (codeTree, hlit, hdist, _v0) {
 		var i = _v0.a;
@@ -7698,7 +7719,7 @@ var $folkertdev$elm_flate$Inflate$Internal$buildBitsBase = F2(
 					sum + (1 << bit),
 					A2(
 						$elm$core$Array$push,
-						{aa: sum, a: bit},
+						{ac: sum, a: bit},
 						accum));
 			});
 		var bits = A2($elm$core$Array$initialize, 30, initializer);
@@ -7715,7 +7736,7 @@ var $folkertdev$elm_flate$Inflate$Internal$hardcodedLengthTable = function (_v0)
 	return A3(
 		$elm$core$Array$set,
 		28,
-		{aa: 258, a: 0},
+		{ac: 258, a: 0},
 		array);
 }(
 	A2($folkertdev$elm_flate$Inflate$Internal$buildBitsBase, 4, 3));
@@ -7736,7 +7757,7 @@ var $folkertdev$elm_flate$Inflate$Internal$decodeLength = function (symbol) {
 			}());
 	} else {
 		var entry = _v0.a;
-		return A2($folkertdev$elm_flate$Inflate$BitReader$readBits, entry.a, entry.aa);
+		return A2($folkertdev$elm_flate$Inflate$BitReader$readBits, entry.a, entry.ac);
 	}
 };
 var $folkertdev$elm_flate$Inflate$Internal$decodeOffset = F2(
@@ -7764,7 +7785,7 @@ var $folkertdev$elm_flate$Inflate$Internal$decodeOffset = F2(
 						function (v) {
 							return outputLength - v;
 						},
-						A2($folkertdev$elm_flate$Inflate$BitReader$readBits, entry.a, entry.aa));
+						A2($folkertdev$elm_flate$Inflate$BitReader$readBits, entry.a, entry.ac));
 				}
 			},
 			A2($folkertdev$elm_flate$Inflate$Internal$decodeSymbol, table_, dt));
@@ -8383,35 +8404,45 @@ var $author$project$Compress$decode = function (compressed) {
 						'/',
 						A3($elm$core$String$replace, '-', '+', compressed))))));
 };
-var $author$project$Route$Show$init = F3(
-	function (url, key, flags) {
+var $author$project$Route$Show$init = F4(
+	function (url, key, flags, _v0) {
 		return _Utils_Tuple2(
 			{
-				ad: key,
-				Z: A2(
+				X: key,
+				aa: A2(
 					$elm$core$Maybe$withDefault,
 					'',
 					$author$project$Compress$decode(flags)),
-				am: url
+				ao: url
 			},
 			$elm$core$Platform$Cmd$none);
 	});
-var $author$project$Main$initRoute = F3(
-	function (url, key, route) {
+var $author$project$Main$initRoute = F4(
+	function (url, key, options, route) {
 		if (route.$ === 1) {
 			var flags = route.a;
 			return A3(
 				$author$project$Main$fix,
 				$author$project$Main$EditModel,
 				A2($elm$core$Basics$composeL, $author$project$Main$RoutedMsg, $author$project$Main$EditMsg),
-				A3($author$project$Route$Edit$init, url, key, flags));
+				A4(
+					$author$project$Route$Edit$init,
+					url,
+					key,
+					flags,
+					A2($elm$core$Maybe$andThen, $author$project$Route$getEditOptions, options)));
 		} else {
 			var flags = route.a;
 			return A3(
 				$author$project$Main$fix,
 				$author$project$Main$ShowModel,
 				A2($elm$core$Basics$composeL, $author$project$Main$RoutedMsg, $author$project$Main$ShowMsg),
-				A3($author$project$Route$Show$init, url, key, flags));
+				A4(
+					$author$project$Route$Show$init,
+					url,
+					key,
+					flags,
+					A2($elm$core$Maybe$andThen, $author$project$Route$getShowOptions, options)));
 		}
 	});
 var $author$project$Route$Edit = function (a) {
@@ -8534,9 +8565,9 @@ var $elm$url$Url$Parser$parse = F2(
 				A5(
 					$elm$url$Url$Parser$State,
 					_List_Nil,
-					$elm$url$Url$Parser$preparePath(url.be),
-					$elm$url$Url$Parser$prepareQuery(url.bf),
-					url.av,
+					$elm$url$Url$Parser$preparePath(url.bg),
+					$elm$url$Url$Parser$prepareQuery(url.bh),
+					url.ax,
 					$elm$core$Basics$identity)));
 	});
 var $elm$url$Url$Parser$Parser = $elm$core$Basics$identity;
@@ -8635,7 +8666,7 @@ var $author$project$Route$text = function (url) {
 				$elm$url$Url$Parser$Query$string('text')),
 			_Utils_update(
 				url,
-				{be: ''})));
+				{bg: ''})));
 };
 var $author$project$Route$route = function (url) {
 	return A2(
@@ -8648,15 +8679,16 @@ var $author$project$Route$route = function (url) {
 };
 var $author$project$Main$init = F3(
 	function (_v0, url, key) {
-		var _v1 = A3(
+		var _v1 = A4(
 			$author$project$Main$initRoute,
 			url,
 			key,
+			$elm$core$Maybe$Nothing,
 			$author$project$Route$route(url));
 		var model = _v1.a;
 		var cmd = _v1.b;
 		return _Utils_Tuple2(
-			{ad: key, L: model},
+			{X: key, L: model, Y: $elm$core$Maybe$Nothing, ao: url},
 			cmd);
 	});
 var $elm$core$Platform$Sub$batch = _Platform_batch;
@@ -8681,6 +8713,102 @@ var $author$project$Main$onUrlRequest = function (request) {
 			$elm$browser$Browser$Navigation$load(url));
 	}
 };
+var $author$project$Route$EditOptions = function (a) {
+	return {$: 1, a: a};
+};
+var $author$project$Ref$editorUrl = function (url) {
+	return _Utils_update(
+		url,
+		{bh: $elm$core$Maybe$Nothing});
+};
+var $elm$browser$Browser$Navigation$pushUrl = _Browser_pushUrl;
+var $elm$url$Url$addPort = F2(
+	function (maybePort, starter) {
+		if (maybePort.$ === 1) {
+			return starter;
+		} else {
+			var port_ = maybePort.a;
+			return starter + (':' + $elm$core$String$fromInt(port_));
+		}
+	});
+var $elm$url$Url$addPrefixed = F3(
+	function (prefix, maybeSegment, starter) {
+		if (maybeSegment.$ === 1) {
+			return starter;
+		} else {
+			var segment = maybeSegment.a;
+			return _Utils_ap(
+				starter,
+				_Utils_ap(prefix, segment));
+		}
+	});
+var $elm$url$Url$toString = function (url) {
+	var http = function () {
+		var _v0 = url.aM;
+		if (!_v0) {
+			return 'http://';
+		} else {
+			return 'https://';
+		}
+	}();
+	return A3(
+		$elm$url$Url$addPrefixed,
+		'#',
+		url.ax,
+		A3(
+			$elm$url$Url$addPrefixed,
+			'?',
+			url.bh,
+			_Utils_ap(
+				A2(
+					$elm$url$Url$addPort,
+					url.aJ,
+					_Utils_ap(http, url.az)),
+				url.bg)));
+};
+var $author$project$Main$updateOut = F2(
+	function (msg, _v0) {
+		var model = _v0.a;
+		var cmd = _v0.b;
+		if (!msg.$) {
+			return _Utils_Tuple2(model, cmd);
+		} else {
+			var text = msg.a;
+			return _Utils_Tuple2(
+				_Utils_update(
+					model,
+					{
+						Y: $elm$core$Maybe$Just(
+							$author$project$Route$EditOptions(
+								$elm$core$Maybe$Just(text)))
+					}),
+				$elm$core$Platform$Cmd$batch(
+					_List_fromArray(
+						[
+							cmd,
+							A2(
+							$elm$browser$Browser$Navigation$pushUrl,
+							model.X,
+							$elm$url$Url$toString(
+								$author$project$Ref$editorUrl(model.ao)))
+						])));
+		}
+	});
+var $author$project$OutMsg$Noop = {$: 0};
+var $author$project$Main$fix3 = F3(
+	function (f, g, _v0) {
+		var a = _v0.a;
+		var b = _v0.b;
+		var c = _v0.c;
+		var _v1 = A3(
+			$author$project$Main$fix,
+			f,
+			g,
+			_Utils_Tuple2(a, b));
+		var x = _v1.a;
+		var y = _v1.b;
+		return _Utils_Tuple3(x, y, c);
+	});
 var $folkertdev$elm_flate$Flate$Dynamic = function (a) {
 	return {$: 1, a: a};
 };
@@ -9208,7 +9336,7 @@ var $folkertdev$elm_flate$Huffman$new = function (n) {
 		$elm$core$Array$repeat,
 		n,
 		$folkertdev$elm_flate$Huffman$codeFromRecord(
-			{a: 0, aR: 0}));
+			{a: 0, aT: 0}));
 };
 var $folkertdev$elm_flate$Huffman$inverseEndianLoop = F4(
 	function (i, limit, f, t) {
@@ -9230,10 +9358,10 @@ var $folkertdev$elm_flate$Huffman$inverseEndianLoop = F4(
 		}
 	});
 var $folkertdev$elm_flate$Huffman$inverseEndian = function (_v0) {
-	var width = _v0.aR;
+	var width = _v0.aT;
 	var bits = _v0.a;
 	var inverseBits = A4($folkertdev$elm_flate$Huffman$inverseEndianLoop, 0, width, bits, 0);
-	return {a: inverseBits, aR: width};
+	return {a: inverseBits, aT: width};
 };
 var $folkertdev$elm_flate$Huffman$setMapping = F3(
 	function (symbol, code, _v0) {
@@ -9270,7 +9398,7 @@ var $folkertdev$elm_flate$Huffman$restoreCanonicalHuffmanCodes = F2(
 				var prevWidth = _v2.b;
 				var currentTree = _v2.c;
 				var newBits = code << (bitWidth - prevWidth);
-				var nextCode = {a: newBits, aR: bitWidth};
+				var nextCode = {a: newBits, aT: bitWidth};
 				return _Utils_Tuple3(
 					newBits + 1,
 					bitWidth,
@@ -9902,7 +10030,7 @@ var $folkertdev$elm_flate$Experimental$ByteArray$fromBytes = function (buffer) {
 };
 var $folkertdev$elm_flate$LZ77$encodeWithOptions = F2(
 	function (_v0, buffer) {
-		var windowSize = _v0.bo;
+		var windowSize = _v0.bq;
 		return A2(
 			$folkertdev$elm_flate$LZ77$flush,
 			windowSize,
@@ -9981,7 +10109,7 @@ var $folkertdev$elm_flate$Deflate$Internal$compress = F2(
 					$folkertdev$elm_flate$Deflate$Internal$codeToSymbol,
 					A2(
 						$folkertdev$elm_flate$LZ77$encodeWithOptions,
-						{bo: windowSize},
+						{bq: windowSize},
 						buf)));
 		}
 	});
@@ -10007,7 +10135,7 @@ var $folkertdev$elm_flate$Huffman$encode = F2(
 		if (_v1.$ === 1) {
 			return A2($folkertdev$elm_flate$Deflate$BitWriter$writeBits, 0, 0);
 		} else {
-			var width = _v1.a.aR;
+			var width = _v1.a.aT;
 			var bits = _v1.a.a;
 			return A2($folkertdev$elm_flate$Deflate$BitWriter$writeBits, width, bits);
 		}
@@ -10147,7 +10275,7 @@ var $folkertdev$elm_flate$Deflate$Symbol$calculateCodes = function (runLengths) 
 	return A3($elm$core$Array$foldl, folder, $elm$core$Array$empty, runLengths);
 };
 var $folkertdev$elm_flate$Huffman$getWidth = function (_v0) {
-	var width = _v0.aR;
+	var width = _v0.aT;
 	return width;
 };
 var $folkertdev$elm_flate$Huffman$lookup = F2(
@@ -10286,7 +10414,7 @@ var $folkertdev$elm_flate$Huffman$usedMaxSymbol = function (_v0) {
 			$folkertdev$elm_flate$Huffman$positionFromTheEnd,
 			function (_v1) {
 				var value = _v1;
-				return value.aR > 0;
+				return value.aT > 0;
 			},
 			array));
 };
@@ -10804,328 +10932,328 @@ var $folkertdev$elm_flate$Huffman$hardcodedStaticHuffmanTree = {
 	C: $folkertdev$elm_flate$Huffman$fromList(
 		_List_fromArray(
 			[
-				{a: 0, aR: 5},
-				{a: 16, aR: 5},
-				{a: 8, aR: 5},
-				{a: 24, aR: 5},
-				{a: 4, aR: 5},
-				{a: 20, aR: 5},
-				{a: 12, aR: 5},
-				{a: 28, aR: 5},
-				{a: 2, aR: 5},
-				{a: 18, aR: 5},
-				{a: 10, aR: 5},
-				{a: 26, aR: 5},
-				{a: 6, aR: 5},
-				{a: 22, aR: 5},
-				{a: 14, aR: 5},
-				{a: 30, aR: 5},
-				{a: 1, aR: 5},
-				{a: 17, aR: 5},
-				{a: 9, aR: 5},
-				{a: 25, aR: 5},
-				{a: 5, aR: 5},
-				{a: 21, aR: 5},
-				{a: 13, aR: 5},
-				{a: 29, aR: 5},
-				{a: 3, aR: 5},
-				{a: 19, aR: 5},
-				{a: 11, aR: 5},
-				{a: 27, aR: 5},
-				{a: 7, aR: 5},
-				{a: 23, aR: 5}
+				{a: 0, aT: 5},
+				{a: 16, aT: 5},
+				{a: 8, aT: 5},
+				{a: 24, aT: 5},
+				{a: 4, aT: 5},
+				{a: 20, aT: 5},
+				{a: 12, aT: 5},
+				{a: 28, aT: 5},
+				{a: 2, aT: 5},
+				{a: 18, aT: 5},
+				{a: 10, aT: 5},
+				{a: 26, aT: 5},
+				{a: 6, aT: 5},
+				{a: 22, aT: 5},
+				{a: 14, aT: 5},
+				{a: 30, aT: 5},
+				{a: 1, aT: 5},
+				{a: 17, aT: 5},
+				{a: 9, aT: 5},
+				{a: 25, aT: 5},
+				{a: 5, aT: 5},
+				{a: 21, aT: 5},
+				{a: 13, aT: 5},
+				{a: 29, aT: 5},
+				{a: 3, aT: 5},
+				{a: 19, aT: 5},
+				{a: 11, aT: 5},
+				{a: 27, aT: 5},
+				{a: 7, aT: 5},
+				{a: 23, aT: 5}
 			])),
 	E: $folkertdev$elm_flate$Huffman$fromList(
 		_List_fromArray(
 			[
-				{a: 12, aR: 8},
-				{a: 140, aR: 8},
-				{a: 76, aR: 8},
-				{a: 204, aR: 8},
-				{a: 44, aR: 8},
-				{a: 172, aR: 8},
-				{a: 108, aR: 8},
-				{a: 236, aR: 8},
-				{a: 28, aR: 8},
-				{a: 156, aR: 8},
-				{a: 92, aR: 8},
-				{a: 220, aR: 8},
-				{a: 60, aR: 8},
-				{a: 188, aR: 8},
-				{a: 124, aR: 8},
-				{a: 252, aR: 8},
-				{a: 2, aR: 8},
-				{a: 130, aR: 8},
-				{a: 66, aR: 8},
-				{a: 194, aR: 8},
-				{a: 34, aR: 8},
-				{a: 162, aR: 8},
-				{a: 98, aR: 8},
-				{a: 226, aR: 8},
-				{a: 18, aR: 8},
-				{a: 146, aR: 8},
-				{a: 82, aR: 8},
-				{a: 210, aR: 8},
-				{a: 50, aR: 8},
-				{a: 178, aR: 8},
-				{a: 114, aR: 8},
-				{a: 242, aR: 8},
-				{a: 10, aR: 8},
-				{a: 138, aR: 8},
-				{a: 74, aR: 8},
-				{a: 202, aR: 8},
-				{a: 42, aR: 8},
-				{a: 170, aR: 8},
-				{a: 106, aR: 8},
-				{a: 234, aR: 8},
-				{a: 26, aR: 8},
-				{a: 154, aR: 8},
-				{a: 90, aR: 8},
-				{a: 218, aR: 8},
-				{a: 58, aR: 8},
-				{a: 186, aR: 8},
-				{a: 122, aR: 8},
-				{a: 250, aR: 8},
-				{a: 6, aR: 8},
-				{a: 134, aR: 8},
-				{a: 70, aR: 8},
-				{a: 198, aR: 8},
-				{a: 38, aR: 8},
-				{a: 166, aR: 8},
-				{a: 102, aR: 8},
-				{a: 230, aR: 8},
-				{a: 22, aR: 8},
-				{a: 150, aR: 8},
-				{a: 86, aR: 8},
-				{a: 214, aR: 8},
-				{a: 54, aR: 8},
-				{a: 182, aR: 8},
-				{a: 118, aR: 8},
-				{a: 246, aR: 8},
-				{a: 14, aR: 8},
-				{a: 142, aR: 8},
-				{a: 78, aR: 8},
-				{a: 206, aR: 8},
-				{a: 46, aR: 8},
-				{a: 174, aR: 8},
-				{a: 110, aR: 8},
-				{a: 238, aR: 8},
-				{a: 30, aR: 8},
-				{a: 158, aR: 8},
-				{a: 94, aR: 8},
-				{a: 222, aR: 8},
-				{a: 62, aR: 8},
-				{a: 190, aR: 8},
-				{a: 126, aR: 8},
-				{a: 254, aR: 8},
-				{a: 1, aR: 8},
-				{a: 129, aR: 8},
-				{a: 65, aR: 8},
-				{a: 193, aR: 8},
-				{a: 33, aR: 8},
-				{a: 161, aR: 8},
-				{a: 97, aR: 8},
-				{a: 225, aR: 8},
-				{a: 17, aR: 8},
-				{a: 145, aR: 8},
-				{a: 81, aR: 8},
-				{a: 209, aR: 8},
-				{a: 49, aR: 8},
-				{a: 177, aR: 8},
-				{a: 113, aR: 8},
-				{a: 241, aR: 8},
-				{a: 9, aR: 8},
-				{a: 137, aR: 8},
-				{a: 73, aR: 8},
-				{a: 201, aR: 8},
-				{a: 41, aR: 8},
-				{a: 169, aR: 8},
-				{a: 105, aR: 8},
-				{a: 233, aR: 8},
-				{a: 25, aR: 8},
-				{a: 153, aR: 8},
-				{a: 89, aR: 8},
-				{a: 217, aR: 8},
-				{a: 57, aR: 8},
-				{a: 185, aR: 8},
-				{a: 121, aR: 8},
-				{a: 249, aR: 8},
-				{a: 5, aR: 8},
-				{a: 133, aR: 8},
-				{a: 69, aR: 8},
-				{a: 197, aR: 8},
-				{a: 37, aR: 8},
-				{a: 165, aR: 8},
-				{a: 101, aR: 8},
-				{a: 229, aR: 8},
-				{a: 21, aR: 8},
-				{a: 149, aR: 8},
-				{a: 85, aR: 8},
-				{a: 213, aR: 8},
-				{a: 53, aR: 8},
-				{a: 181, aR: 8},
-				{a: 117, aR: 8},
-				{a: 245, aR: 8},
-				{a: 13, aR: 8},
-				{a: 141, aR: 8},
-				{a: 77, aR: 8},
-				{a: 205, aR: 8},
-				{a: 45, aR: 8},
-				{a: 173, aR: 8},
-				{a: 109, aR: 8},
-				{a: 237, aR: 8},
-				{a: 29, aR: 8},
-				{a: 157, aR: 8},
-				{a: 93, aR: 8},
-				{a: 221, aR: 8},
-				{a: 61, aR: 8},
-				{a: 189, aR: 8},
-				{a: 125, aR: 8},
-				{a: 253, aR: 8},
-				{a: 19, aR: 9},
-				{a: 275, aR: 9},
-				{a: 147, aR: 9},
-				{a: 403, aR: 9},
-				{a: 83, aR: 9},
-				{a: 339, aR: 9},
-				{a: 211, aR: 9},
-				{a: 467, aR: 9},
-				{a: 51, aR: 9},
-				{a: 307, aR: 9},
-				{a: 179, aR: 9},
-				{a: 435, aR: 9},
-				{a: 115, aR: 9},
-				{a: 371, aR: 9},
-				{a: 243, aR: 9},
-				{a: 499, aR: 9},
-				{a: 11, aR: 9},
-				{a: 267, aR: 9},
-				{a: 139, aR: 9},
-				{a: 395, aR: 9},
-				{a: 75, aR: 9},
-				{a: 331, aR: 9},
-				{a: 203, aR: 9},
-				{a: 459, aR: 9},
-				{a: 43, aR: 9},
-				{a: 299, aR: 9},
-				{a: 171, aR: 9},
-				{a: 427, aR: 9},
-				{a: 107, aR: 9},
-				{a: 363, aR: 9},
-				{a: 235, aR: 9},
-				{a: 491, aR: 9},
-				{a: 27, aR: 9},
-				{a: 283, aR: 9},
-				{a: 155, aR: 9},
-				{a: 411, aR: 9},
-				{a: 91, aR: 9},
-				{a: 347, aR: 9},
-				{a: 219, aR: 9},
-				{a: 475, aR: 9},
-				{a: 59, aR: 9},
-				{a: 315, aR: 9},
-				{a: 187, aR: 9},
-				{a: 443, aR: 9},
-				{a: 123, aR: 9},
-				{a: 379, aR: 9},
-				{a: 251, aR: 9},
-				{a: 507, aR: 9},
-				{a: 7, aR: 9},
-				{a: 263, aR: 9},
-				{a: 135, aR: 9},
-				{a: 391, aR: 9},
-				{a: 71, aR: 9},
-				{a: 327, aR: 9},
-				{a: 199, aR: 9},
-				{a: 455, aR: 9},
-				{a: 39, aR: 9},
-				{a: 295, aR: 9},
-				{a: 167, aR: 9},
-				{a: 423, aR: 9},
-				{a: 103, aR: 9},
-				{a: 359, aR: 9},
-				{a: 231, aR: 9},
-				{a: 487, aR: 9},
-				{a: 23, aR: 9},
-				{a: 279, aR: 9},
-				{a: 151, aR: 9},
-				{a: 407, aR: 9},
-				{a: 87, aR: 9},
-				{a: 343, aR: 9},
-				{a: 215, aR: 9},
-				{a: 471, aR: 9},
-				{a: 55, aR: 9},
-				{a: 311, aR: 9},
-				{a: 183, aR: 9},
-				{a: 439, aR: 9},
-				{a: 119, aR: 9},
-				{a: 375, aR: 9},
-				{a: 247, aR: 9},
-				{a: 503, aR: 9},
-				{a: 15, aR: 9},
-				{a: 271, aR: 9},
-				{a: 143, aR: 9},
-				{a: 399, aR: 9},
-				{a: 79, aR: 9},
-				{a: 335, aR: 9},
-				{a: 207, aR: 9},
-				{a: 463, aR: 9},
-				{a: 47, aR: 9},
-				{a: 303, aR: 9},
-				{a: 175, aR: 9},
-				{a: 431, aR: 9},
-				{a: 111, aR: 9},
-				{a: 367, aR: 9},
-				{a: 239, aR: 9},
-				{a: 495, aR: 9},
-				{a: 31, aR: 9},
-				{a: 287, aR: 9},
-				{a: 159, aR: 9},
-				{a: 415, aR: 9},
-				{a: 95, aR: 9},
-				{a: 351, aR: 9},
-				{a: 223, aR: 9},
-				{a: 479, aR: 9},
-				{a: 63, aR: 9},
-				{a: 319, aR: 9},
-				{a: 191, aR: 9},
-				{a: 447, aR: 9},
-				{a: 127, aR: 9},
-				{a: 383, aR: 9},
-				{a: 255, aR: 9},
-				{a: 511, aR: 9},
-				{a: 0, aR: 7},
-				{a: 64, aR: 7},
-				{a: 32, aR: 7},
-				{a: 96, aR: 7},
-				{a: 16, aR: 7},
-				{a: 80, aR: 7},
-				{a: 48, aR: 7},
-				{a: 112, aR: 7},
-				{a: 8, aR: 7},
-				{a: 72, aR: 7},
-				{a: 40, aR: 7},
-				{a: 104, aR: 7},
-				{a: 24, aR: 7},
-				{a: 88, aR: 7},
-				{a: 56, aR: 7},
-				{a: 120, aR: 7},
-				{a: 4, aR: 7},
-				{a: 68, aR: 7},
-				{a: 36, aR: 7},
-				{a: 100, aR: 7},
-				{a: 20, aR: 7},
-				{a: 84, aR: 7},
-				{a: 52, aR: 7},
-				{a: 116, aR: 7},
-				{a: 3, aR: 8},
-				{a: 131, aR: 8},
-				{a: 67, aR: 8},
-				{a: 195, aR: 8},
-				{a: 35, aR: 8},
-				{a: 163, aR: 8},
-				{a: 99, aR: 8},
-				{a: 227, aR: 8}
+				{a: 12, aT: 8},
+				{a: 140, aT: 8},
+				{a: 76, aT: 8},
+				{a: 204, aT: 8},
+				{a: 44, aT: 8},
+				{a: 172, aT: 8},
+				{a: 108, aT: 8},
+				{a: 236, aT: 8},
+				{a: 28, aT: 8},
+				{a: 156, aT: 8},
+				{a: 92, aT: 8},
+				{a: 220, aT: 8},
+				{a: 60, aT: 8},
+				{a: 188, aT: 8},
+				{a: 124, aT: 8},
+				{a: 252, aT: 8},
+				{a: 2, aT: 8},
+				{a: 130, aT: 8},
+				{a: 66, aT: 8},
+				{a: 194, aT: 8},
+				{a: 34, aT: 8},
+				{a: 162, aT: 8},
+				{a: 98, aT: 8},
+				{a: 226, aT: 8},
+				{a: 18, aT: 8},
+				{a: 146, aT: 8},
+				{a: 82, aT: 8},
+				{a: 210, aT: 8},
+				{a: 50, aT: 8},
+				{a: 178, aT: 8},
+				{a: 114, aT: 8},
+				{a: 242, aT: 8},
+				{a: 10, aT: 8},
+				{a: 138, aT: 8},
+				{a: 74, aT: 8},
+				{a: 202, aT: 8},
+				{a: 42, aT: 8},
+				{a: 170, aT: 8},
+				{a: 106, aT: 8},
+				{a: 234, aT: 8},
+				{a: 26, aT: 8},
+				{a: 154, aT: 8},
+				{a: 90, aT: 8},
+				{a: 218, aT: 8},
+				{a: 58, aT: 8},
+				{a: 186, aT: 8},
+				{a: 122, aT: 8},
+				{a: 250, aT: 8},
+				{a: 6, aT: 8},
+				{a: 134, aT: 8},
+				{a: 70, aT: 8},
+				{a: 198, aT: 8},
+				{a: 38, aT: 8},
+				{a: 166, aT: 8},
+				{a: 102, aT: 8},
+				{a: 230, aT: 8},
+				{a: 22, aT: 8},
+				{a: 150, aT: 8},
+				{a: 86, aT: 8},
+				{a: 214, aT: 8},
+				{a: 54, aT: 8},
+				{a: 182, aT: 8},
+				{a: 118, aT: 8},
+				{a: 246, aT: 8},
+				{a: 14, aT: 8},
+				{a: 142, aT: 8},
+				{a: 78, aT: 8},
+				{a: 206, aT: 8},
+				{a: 46, aT: 8},
+				{a: 174, aT: 8},
+				{a: 110, aT: 8},
+				{a: 238, aT: 8},
+				{a: 30, aT: 8},
+				{a: 158, aT: 8},
+				{a: 94, aT: 8},
+				{a: 222, aT: 8},
+				{a: 62, aT: 8},
+				{a: 190, aT: 8},
+				{a: 126, aT: 8},
+				{a: 254, aT: 8},
+				{a: 1, aT: 8},
+				{a: 129, aT: 8},
+				{a: 65, aT: 8},
+				{a: 193, aT: 8},
+				{a: 33, aT: 8},
+				{a: 161, aT: 8},
+				{a: 97, aT: 8},
+				{a: 225, aT: 8},
+				{a: 17, aT: 8},
+				{a: 145, aT: 8},
+				{a: 81, aT: 8},
+				{a: 209, aT: 8},
+				{a: 49, aT: 8},
+				{a: 177, aT: 8},
+				{a: 113, aT: 8},
+				{a: 241, aT: 8},
+				{a: 9, aT: 8},
+				{a: 137, aT: 8},
+				{a: 73, aT: 8},
+				{a: 201, aT: 8},
+				{a: 41, aT: 8},
+				{a: 169, aT: 8},
+				{a: 105, aT: 8},
+				{a: 233, aT: 8},
+				{a: 25, aT: 8},
+				{a: 153, aT: 8},
+				{a: 89, aT: 8},
+				{a: 217, aT: 8},
+				{a: 57, aT: 8},
+				{a: 185, aT: 8},
+				{a: 121, aT: 8},
+				{a: 249, aT: 8},
+				{a: 5, aT: 8},
+				{a: 133, aT: 8},
+				{a: 69, aT: 8},
+				{a: 197, aT: 8},
+				{a: 37, aT: 8},
+				{a: 165, aT: 8},
+				{a: 101, aT: 8},
+				{a: 229, aT: 8},
+				{a: 21, aT: 8},
+				{a: 149, aT: 8},
+				{a: 85, aT: 8},
+				{a: 213, aT: 8},
+				{a: 53, aT: 8},
+				{a: 181, aT: 8},
+				{a: 117, aT: 8},
+				{a: 245, aT: 8},
+				{a: 13, aT: 8},
+				{a: 141, aT: 8},
+				{a: 77, aT: 8},
+				{a: 205, aT: 8},
+				{a: 45, aT: 8},
+				{a: 173, aT: 8},
+				{a: 109, aT: 8},
+				{a: 237, aT: 8},
+				{a: 29, aT: 8},
+				{a: 157, aT: 8},
+				{a: 93, aT: 8},
+				{a: 221, aT: 8},
+				{a: 61, aT: 8},
+				{a: 189, aT: 8},
+				{a: 125, aT: 8},
+				{a: 253, aT: 8},
+				{a: 19, aT: 9},
+				{a: 275, aT: 9},
+				{a: 147, aT: 9},
+				{a: 403, aT: 9},
+				{a: 83, aT: 9},
+				{a: 339, aT: 9},
+				{a: 211, aT: 9},
+				{a: 467, aT: 9},
+				{a: 51, aT: 9},
+				{a: 307, aT: 9},
+				{a: 179, aT: 9},
+				{a: 435, aT: 9},
+				{a: 115, aT: 9},
+				{a: 371, aT: 9},
+				{a: 243, aT: 9},
+				{a: 499, aT: 9},
+				{a: 11, aT: 9},
+				{a: 267, aT: 9},
+				{a: 139, aT: 9},
+				{a: 395, aT: 9},
+				{a: 75, aT: 9},
+				{a: 331, aT: 9},
+				{a: 203, aT: 9},
+				{a: 459, aT: 9},
+				{a: 43, aT: 9},
+				{a: 299, aT: 9},
+				{a: 171, aT: 9},
+				{a: 427, aT: 9},
+				{a: 107, aT: 9},
+				{a: 363, aT: 9},
+				{a: 235, aT: 9},
+				{a: 491, aT: 9},
+				{a: 27, aT: 9},
+				{a: 283, aT: 9},
+				{a: 155, aT: 9},
+				{a: 411, aT: 9},
+				{a: 91, aT: 9},
+				{a: 347, aT: 9},
+				{a: 219, aT: 9},
+				{a: 475, aT: 9},
+				{a: 59, aT: 9},
+				{a: 315, aT: 9},
+				{a: 187, aT: 9},
+				{a: 443, aT: 9},
+				{a: 123, aT: 9},
+				{a: 379, aT: 9},
+				{a: 251, aT: 9},
+				{a: 507, aT: 9},
+				{a: 7, aT: 9},
+				{a: 263, aT: 9},
+				{a: 135, aT: 9},
+				{a: 391, aT: 9},
+				{a: 71, aT: 9},
+				{a: 327, aT: 9},
+				{a: 199, aT: 9},
+				{a: 455, aT: 9},
+				{a: 39, aT: 9},
+				{a: 295, aT: 9},
+				{a: 167, aT: 9},
+				{a: 423, aT: 9},
+				{a: 103, aT: 9},
+				{a: 359, aT: 9},
+				{a: 231, aT: 9},
+				{a: 487, aT: 9},
+				{a: 23, aT: 9},
+				{a: 279, aT: 9},
+				{a: 151, aT: 9},
+				{a: 407, aT: 9},
+				{a: 87, aT: 9},
+				{a: 343, aT: 9},
+				{a: 215, aT: 9},
+				{a: 471, aT: 9},
+				{a: 55, aT: 9},
+				{a: 311, aT: 9},
+				{a: 183, aT: 9},
+				{a: 439, aT: 9},
+				{a: 119, aT: 9},
+				{a: 375, aT: 9},
+				{a: 247, aT: 9},
+				{a: 503, aT: 9},
+				{a: 15, aT: 9},
+				{a: 271, aT: 9},
+				{a: 143, aT: 9},
+				{a: 399, aT: 9},
+				{a: 79, aT: 9},
+				{a: 335, aT: 9},
+				{a: 207, aT: 9},
+				{a: 463, aT: 9},
+				{a: 47, aT: 9},
+				{a: 303, aT: 9},
+				{a: 175, aT: 9},
+				{a: 431, aT: 9},
+				{a: 111, aT: 9},
+				{a: 367, aT: 9},
+				{a: 239, aT: 9},
+				{a: 495, aT: 9},
+				{a: 31, aT: 9},
+				{a: 287, aT: 9},
+				{a: 159, aT: 9},
+				{a: 415, aT: 9},
+				{a: 95, aT: 9},
+				{a: 351, aT: 9},
+				{a: 223, aT: 9},
+				{a: 479, aT: 9},
+				{a: 63, aT: 9},
+				{a: 319, aT: 9},
+				{a: 191, aT: 9},
+				{a: 447, aT: 9},
+				{a: 127, aT: 9},
+				{a: 383, aT: 9},
+				{a: 255, aT: 9},
+				{a: 511, aT: 9},
+				{a: 0, aT: 7},
+				{a: 64, aT: 7},
+				{a: 32, aT: 7},
+				{a: 96, aT: 7},
+				{a: 16, aT: 7},
+				{a: 80, aT: 7},
+				{a: 48, aT: 7},
+				{a: 112, aT: 7},
+				{a: 8, aT: 7},
+				{a: 72, aT: 7},
+				{a: 40, aT: 7},
+				{a: 104, aT: 7},
+				{a: 24, aT: 7},
+				{a: 88, aT: 7},
+				{a: 56, aT: 7},
+				{a: 120, aT: 7},
+				{a: 4, aT: 7},
+				{a: 68, aT: 7},
+				{a: 36, aT: 7},
+				{a: 100, aT: 7},
+				{a: 20, aT: 7},
+				{a: 84, aT: 7},
+				{a: 52, aT: 7},
+				{a: 116, aT: 7},
+				{a: 3, aT: 8},
+				{a: 131, aT: 8},
+				{a: 67, aT: 8},
+				{a: 195, aT: 8},
+				{a: 35, aT: 8},
+				{a: 163, aT: 8},
+				{a: 99, aT: 8},
+				{a: 227, aT: 8}
 			]))
 };
 var $folkertdev$elm_flate$Deflate$Internal$encodeCompressStatic = F3(
@@ -11356,16 +11484,16 @@ var $elm$bytes$Bytes$Decode$map3 = F4(
 			});
 	});
 var $danfishgold$base64_bytes$Decode$loopHelp = function (_v0) {
-	var remaining = _v0.X;
-	var string = _v0.Y;
+	var remaining = _v0.Z;
+	var string = _v0._;
 	if (remaining >= 18) {
 		return A2(
 			$elm$bytes$Bytes$Decode$map,
 			function (result) {
 				return $elm$bytes$Bytes$Decode$Loop(
 					{
-						X: remaining - 18,
-						Y: _Utils_ap(string, result)
+						Z: remaining - 18,
+						_: _Utils_ap(string, result)
 					});
 			},
 			$danfishgold$base64_bytes$Decode$decode18Bytes);
@@ -11376,8 +11504,8 @@ var $danfishgold$base64_bytes$Decode$loopHelp = function (_v0) {
 					var combined = ((a << 16) | (b << 8)) | c;
 					return $elm$bytes$Bytes$Decode$Loop(
 						{
-							X: remaining - 3,
-							Y: _Utils_ap(
+							Z: remaining - 3,
+							_: _Utils_ap(
 								string,
 								A2($danfishgold$base64_bytes$Decode$bitsToChars, combined, 0))
 						});
@@ -11416,7 +11544,7 @@ var $danfishgold$base64_bytes$Decode$loopHelp = function (_v0) {
 var $danfishgold$base64_bytes$Decode$decoder = function (width) {
 	return A2(
 		$elm$bytes$Bytes$Decode$loop,
-		{X: width, Y: ''},
+		{Z: width, _: ''},
 		$danfishgold$base64_bytes$Decode$loopHelp);
 };
 var $danfishgold$base64_bytes$Decode$fromBytes = function (bytes) {
@@ -11482,50 +11610,6 @@ var $elm$url$Url$Builder$toQuery = function (parameters) {
 			A2($elm$core$List$map, $elm$url$Url$Builder$toQueryPair, parameters));
 	}
 };
-var $elm$url$Url$addPort = F2(
-	function (maybePort, starter) {
-		if (maybePort.$ === 1) {
-			return starter;
-		} else {
-			var port_ = maybePort.a;
-			return starter + (':' + $elm$core$String$fromInt(port_));
-		}
-	});
-var $elm$url$Url$addPrefixed = F3(
-	function (prefix, maybeSegment, starter) {
-		if (maybeSegment.$ === 1) {
-			return starter;
-		} else {
-			var segment = maybeSegment.a;
-			return _Utils_ap(
-				starter,
-				_Utils_ap(prefix, segment));
-		}
-	});
-var $elm$url$Url$toString = function (url) {
-	var http = function () {
-		var _v0 = url.aK;
-		if (!_v0) {
-			return 'http://';
-		} else {
-			return 'https://';
-		}
-	}();
-	return A3(
-		$elm$url$Url$addPrefixed,
-		'#',
-		url.av,
-		A3(
-			$elm$url$Url$addPrefixed,
-			'?',
-			url.bf,
-			_Utils_ap(
-				A2(
-					$elm$url$Url$addPort,
-					url.aH,
-					_Utils_ap(http, url.ax)),
-				url.be)));
-};
 var $author$project$Route$Edit$showTextUrl = F2(
 	function (url, text) {
 		return A2(
@@ -11548,7 +11632,7 @@ var $author$project$Route$Edit$showTextUrl = F2(
 						return _Utils_update(
 							url,
 							{
-								bf: $elm$core$Maybe$Just(q)
+								bh: $elm$core$Maybe$Just(q)
 							});
 					},
 					$elm$url$Url$toString)),
@@ -11576,44 +11660,50 @@ var $author$project$Route$Edit$loadTwitterSharing = function (model) {
 		A2(
 			$elm$core$Maybe$map,
 			A2($elm$core$Basics$composeL, $elm$browser$Browser$Navigation$load, $author$project$Route$Edit$twitterSharingUrl),
-			A2($author$project$Route$Edit$showTextUrl, model.am, model.Z)));
+			A2($author$project$Route$Edit$showTextUrl, model.ao, model.aa)));
 };
 var $author$project$Route$Edit$update = F2(
 	function (msg, model) {
 		switch (msg.$) {
 			case 0:
-				return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
+				return _Utils_Tuple3(model, $elm$core$Platform$Cmd$none, $author$project$OutMsg$Noop);
 			case 1:
 				var text = msg.a;
-				return _Utils_Tuple2(
+				return _Utils_Tuple3(
 					_Utils_update(
 						model,
-						{Z: text}),
-					$elm$core$Platform$Cmd$none);
+						{aa: text}),
+					$elm$core$Platform$Cmd$none,
+					$author$project$OutMsg$Noop);
 			default:
-				return _Utils_Tuple2(
+				return _Utils_Tuple3(
 					model,
-					$author$project$Route$Edit$loadTwitterSharing(model));
+					$author$project$Route$Edit$loadTwitterSharing(model),
+					$author$project$OutMsg$Noop);
 		}
 	});
-var $author$project$Route$Show$editorUrl = function (url) {
-	return $elm$url$Url$toString(
-		_Utils_update(
-			url,
-			{bf: $elm$core$Maybe$Nothing}));
+var $author$project$OutMsg$EditWith = function (a) {
+	return {$: 1, a: a};
 };
-var $elm$browser$Browser$Navigation$pushUrl = _Browser_pushUrl;
 var $author$project$Route$Show$update = F2(
 	function (msg, model) {
-		if (!msg) {
-			return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
-		} else {
-			return _Utils_Tuple2(
-				model,
-				A2(
-					$elm$browser$Browser$Navigation$pushUrl,
-					model.ad,
-					$author$project$Route$Show$editorUrl(model.am)));
+		switch (msg) {
+			case 0:
+				return _Utils_Tuple3(model, $elm$core$Platform$Cmd$none, $author$project$OutMsg$Noop);
+			case 1:
+				return _Utils_Tuple3(
+					model,
+					A2(
+						$elm$browser$Browser$Navigation$pushUrl,
+						model.X,
+						$elm$url$Url$toString(
+							$author$project$Ref$editorUrl(model.ao))),
+					$author$project$OutMsg$Noop);
+			default:
+				return _Utils_Tuple3(
+					model,
+					$elm$core$Platform$Cmd$none,
+					$author$project$OutMsg$EditWith(model.aa));
 		}
 	});
 var $author$project$Main$updateRoute = F2(
@@ -11626,7 +11716,7 @@ var $author$project$Main$updateRoute = F2(
 					var m = _v0.a.a;
 					var md = _v0.b.a;
 					return A3(
-						$author$project$Main$fix,
+						$author$project$Main$fix3,
 						$author$project$Main$EditModel,
 						A2($elm$core$Basics$composeL, $author$project$Main$RoutedMsg, $author$project$Main$EditMsg),
 						A2($author$project$Route$Edit$update, m, md));
@@ -11638,7 +11728,7 @@ var $author$project$Main$updateRoute = F2(
 					var m = _v0.a.a;
 					var md = _v0.b.a;
 					return A3(
-						$author$project$Main$fix,
+						$author$project$Main$fix3,
 						$author$project$Main$ShowModel,
 						A2($elm$core$Basics$composeL, $author$project$Main$RoutedMsg, $author$project$Main$ShowMsg),
 						A2($author$project$Route$Show$update, m, md));
@@ -11647,7 +11737,7 @@ var $author$project$Main$updateRoute = F2(
 				}
 			}
 		}
-		return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
+		return _Utils_Tuple3(model, $elm$core$Platform$Cmd$none, $author$project$OutMsg$Noop);
 	});
 var $author$project$Main$update = F2(
 	function (msg, model) {
@@ -11662,17 +11752,22 @@ var $author$project$Main$update = F2(
 				var _v1 = A2($author$project$Main$updateRoute, m, model.L);
 				var newModel = _v1.a;
 				var cmd = _v1.b;
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{L: newModel}),
-					cmd);
+				var outMsg = _v1.c;
+				return A2(
+					$author$project$Main$updateOut,
+					outMsg,
+					_Utils_Tuple2(
+						_Utils_update(
+							model,
+							{L: newModel}),
+						cmd));
 			default:
 				var url = msg.a;
-				var _v2 = A3(
+				var _v2 = A4(
 					$author$project$Main$initRoute,
 					url,
-					model.ad,
+					model.X,
+					model.Y,
 					$author$project$Route$route(url));
 				var m = _v2.a;
 				var cmd = _v2.b;
@@ -11757,7 +11852,7 @@ var $elm$html$Html$Attributes$placeholder = $elm$html$Html$Attributes$stringProp
 var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
 var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
 var $elm$html$Html$textarea = _VirtualDom_node('textarea');
-var $author$project$Route$Edit$view = function (_v0) {
+var $author$project$Route$Edit$view = function (model) {
 	return A2(
 		$elm$html$Html$div,
 		_List_fromArray(
@@ -11811,7 +11906,11 @@ var $author$project$Route$Edit$view = function (_v0) {
 										$elm$html$Html$Events$onInput($author$project$Route$Edit$Edit),
 										$elm$html$Html$Attributes$placeholder('_')
 									]),
-								_List_Nil),
+								_List_fromArray(
+									[
+										$elm$html$Html$text(
+										A2($elm$core$Maybe$withDefault, '', model.ae))
+									])),
 								A2(
 								$elm$html$Html$label,
 								_List_fromArray(
@@ -11828,6 +11927,7 @@ var $author$project$Route$Edit$view = function (_v0) {
 			]));
 };
 var $author$project$Route$Show$Edit = 1;
+var $author$project$Route$Show$EditWith = 2;
 var $author$project$Route$Show$view = function (model) {
 	return A2(
 		$elm$html$Html$div,
@@ -11858,6 +11958,17 @@ var $author$project$Route$Show$view = function (model) {
 								_List_fromArray(
 									[
 										$elm$html$Html$Attributes$class('button'),
+										$elm$html$Html$Events$onClick(2)
+									]),
+								_List_fromArray(
+									[
+										$elm$html$Html$text('Edit')
+									])),
+								A2(
+								$elm$html$Html$button,
+								_List_fromArray(
+									[
+										$elm$html$Html$Attributes$class('button'),
 										$elm$html$Html$Events$onClick(1)
 									]),
 								_List_fromArray(
@@ -11881,7 +11992,7 @@ var $author$project$Route$Show$view = function (model) {
 									]),
 								_List_fromArray(
 									[
-										$elm$html$Html$text(model.Z)
+										$elm$html$Html$text(model.aa)
 									]))
 							]))
 					]))
@@ -11905,21 +12016,21 @@ var $author$project$Main$viewRoute = function (model) {
 };
 var $author$project$Main$view = function (model) {
 	return {
-		aW: _List_fromArray(
+		aY: _List_fromArray(
 			[
 				$author$project$Main$viewRoute(model)
 			]),
-		bl: 'text2link'
+		bn: 'text2link'
 	};
 };
 var $author$project$Main$main = $elm$browser$Browser$application(
 	{
-		a6: $author$project$Main$init,
-		bb: $author$project$Main$onUrlChange,
-		bc: $author$project$Main$onUrlRequest,
-		bk: $elm$core$Basics$always($elm$core$Platform$Sub$none),
-		bm: $author$project$Main$update,
-		bn: $author$project$Main$view
+		a8: $author$project$Main$init,
+		bd: $author$project$Main$onUrlChange,
+		be: $author$project$Main$onUrlRequest,
+		bm: $elm$core$Basics$always($elm$core$Platform$Sub$none),
+		bo: $author$project$Main$update,
+		bp: $author$project$Main$view
 	});
 _Platform_export({'Main':{'init':$author$project$Main$main(
 	$elm$json$Json$Decode$succeed(0))(0)}});}(this));

@@ -1,6 +1,5 @@
-module Route exposing (Route(..), route)
+module Route exposing (Options(..), Route(..), getEditOptions, getShowOptions, route)
 
-import Dict
 import Route.Edit
 import Route.Show
 import Url exposing (Url)
@@ -24,3 +23,28 @@ text url =
 route : Url -> Route
 route url =
     text url |> Maybe.map Show |> Maybe.withDefault (Edit ())
+
+
+type Options
+    = ShowOptions Route.Show.Options
+    | EditOptions Route.Edit.Options
+
+
+getShowOptions : Options -> Route.Show.Options
+getShowOptions options =
+    case options of
+        ShowOptions opts ->
+            opts
+
+        _ ->
+            Nothing
+
+
+getEditOptions : Options -> Route.Edit.Options
+getEditOptions options =
+    case options of
+        EditOptions opts ->
+            opts
+
+        _ ->
+            Nothing

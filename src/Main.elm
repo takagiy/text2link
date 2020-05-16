@@ -5,14 +5,19 @@ import Browser.Navigation as Nav
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
+import OutMsg exposing (OutMsg)
+import Ref
 import Route
 import Route.Edit as Edit
 import Route.Show as Show
+import Task
 import Url exposing (Url)
 
 
 type alias Model =
     { key : Nav.Key
+    , url : Url
+    , options : Maybe Route.Options
     , model : RoutedModel
     }
 
@@ -49,23 +54,25 @@ init : () -> Url -> Nav.Key -> ( Model, Cmd Msg )
 init _ url key =
     let
         ( model, cmd ) =
-            initRoute url key (Route.route url)
+            initRoute url key Nothing (Route.route url)
     in
     ( { key = key
+      , url = url
+      , options = Nothing
       , model = model
       }
     , cmd
     )
 
 
-initRoute : Url -> Nav.Key -> Route.Route -> ( RoutedModel, Cmd Msg )
-initRoute url key route =
+initRoute : Url -> Nav.Key -> Maybe Route.Options -> Route.Route -> ( RoutedModel, Cmd Msg )
+initRoute url key options route =
     case route of
         Route.Edit flags ->
-            Edit.init url key flags |> fix EditModel (RoutedMsg << EditMsg)
+            Edit.init url key flags (options |> Maybe.andThen Route.getEditOptions) |> fix EditModel (RoutedMsg << EditMsg)
 
         Route.Show flags ->
-            Show.init url key flags |> fix ShowModel (RoutedMsg << ShowMsg)
+            Show.init url key flags (options |> Maybe.andThen Route.getShowOptions) |> fix ShowModel (RoutedMsg << ShowMsg)
 
 
 view : Model -> Browser.Document Msg
@@ -96,30 +103,45 @@ update msg model =
 
         RoutedMsg m ->
             let
-                ( newModel, cmd ) =
+                ( newModel, cmd, outMsg ) =
                     updateRoute m model.model
             in
-            ( { model | model = newModel }, cmd )
+            updateOut outMsg ( { model | model = newModel }, cmd )
 
         Go url ->
             let
                 ( m, cmd ) =
-                    initRoute url model.key (Route.route url)
+                    initRoute url model.key model.options (Route.route url)
             in
             ( { model | model = m }, cmd )
 
 
-updateRoute : RoutedMsg -> RoutedModel -> ( RoutedModel, Cmd Msg )
+updateOut : OutMsg -> ( Model, Cmd Msg ) -> ( Model, Cmd Msg )
+updateOut msg ( model, cmd ) =
+    case msg of
+        OutMsg.Noop ->
+            ( model, cmd )
+
+        OutMsg.EditWith text ->
+            ( { model | options = Just (Route.EditOptions (Just text)) }
+            , Cmd.batch
+                [ cmd
+                , Nav.pushUrl model.key (Ref.editorUrl model.url |> Url.toString)
+                ]
+            )
+
+
+updateRoute : RoutedMsg -> RoutedModel -> ( RoutedModel, Cmd Msg, OutMsg )
 updateRoute msg model =
     case ( msg, model ) of
         ( EditMsg m, EditModel md ) ->
-            Edit.update m md |> fix EditModel (RoutedMsg << EditMsg)
+            Edit.update m md |> fix3 EditModel (RoutedMsg << EditMsg)
 
         ( ShowMsg m, ShowModel md ) ->
-            Show.update m md |> fix ShowModel (RoutedMsg << ShowMsg)
+            Show.update m md |> fix3 ShowModel (RoutedMsg << ShowMsg)
 
         _ ->
-            ( model, Cmd.none )
+            ( model, Cmd.none, OutMsg.Noop )
 
 
 onUrlRequest : Browser.UrlRequest -> Msg
@@ -145,3 +167,12 @@ fixCmd f =
 fix : (a -> model) -> (b -> msg) -> ( a, Cmd b ) -> ( model, Cmd msg )
 fix f g x =
     x |> Tuple.mapFirst f |> fixCmd g
+
+
+fix3 : (a -> model) -> (b -> msg) -> ( a, Cmd b, OutMsg ) -> ( model, Cmd msg, OutMsg )
+fix3 f g ( a, b, c ) =
+    let
+        ( x, y ) =
+            fix f g ( a, b )
+    in
+    ( x, y, c )

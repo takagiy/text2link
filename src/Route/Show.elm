@@ -1,12 +1,13 @@
-module Route.Show exposing (Flags, Model, Msg, init, update, view)
+module Route.Show exposing (Flags, Model, Msg, Options, init, update, view)
 
 import Browser.Navigation as Nav
 import Compress
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
+import OutMsg exposing (OutMsg)
+import Ref
 import Url exposing (Url)
-import Url.Builder as UB
 
 
 type alias Model =
@@ -19,14 +20,19 @@ type alias Model =
 type Msg
     = Noop
     | Edit
+    | EditWith
 
 
 type alias Flags =
     String
 
 
-init : Url -> Nav.Key -> Flags -> ( Model, Cmd Msg )
-init url key flags =
+type alias Options =
+    Maybe ()
+
+
+init : Url -> Nav.Key -> Flags -> Options -> ( Model, Cmd Msg )
+init url key flags _ =
     ( { text =
             flags |> Compress.decode |> Maybe.withDefault ""
       , url = url
@@ -36,19 +42,17 @@ init url key flags =
     )
 
 
-update : Msg -> Model -> ( Model, Cmd Msg )
+update : Msg -> Model -> ( Model, Cmd Msg, OutMsg )
 update msg model =
     case msg of
         Noop ->
-            ( model, Cmd.none )
+            ( model, Cmd.none, OutMsg.Noop )
 
         Edit ->
-            ( model, Nav.pushUrl model.key (editorUrl model.url) )
+            ( model, Nav.pushUrl model.key (Ref.editorUrl model.url |> Url.toString), OutMsg.Noop )
 
-
-editorUrl : Url -> String
-editorUrl url =
-    Url.toString { url | query = Nothing }
+        EditWith ->
+            ( model, Cmd.none, OutMsg.EditWith model.text )
 
 
 view : Model -> Html Msg
@@ -60,6 +64,11 @@ view model =
             [ div
                 [ class "container-header" ]
                 [ button
+                    [ class "button"
+                    , onClick EditWith
+                    ]
+                    [ text "Edit" ]
+                , button
                     [ class "button"
                     , onClick Edit
                     ]
