@@ -1,49 +1,73 @@
-module Compress exposing (decode, encode, posixDecoder, posixEncoder, stringDecoder, stringEncoder)
+module Compress exposing (decode, encode)
 
 import Base64
-import Bytes exposing (Bytes)
+import Bytes
 import Bytes.Decode as BD
 import Bytes.Encode as BE
 import Flate
 import Time exposing (Posix)
 
 
-stringEncoder : String -> Bytes
+stringEncoder : String -> BE.Encoder
 stringEncoder string =
-    BE.encode (BE.string string)
+    BE.string string
 
 
-stringDecoder : Bytes -> Maybe String
-stringDecoder bytes =
-    BD.decode (BD.string (Bytes.width bytes)) bytes
+stringDecoder : Int -> BD.Decoder String
+stringDecoder width =
+    BD.string width
 
 
-encode : (a -> Bytes) -> a -> Maybe String
-encode toBytes data =
+encodeWith : (a -> BE.Encoder) -> a -> Maybe String
+encodeWith encoder data =
     data
-        |> toBytes
+        |> encoder
+        |> BE.encode
         |> Flate.deflate
         |> Base64.fromBytes
         |> Maybe.map
             (String.replace "+" "-" >> String.replace "/" "." >> String.replace "=" "_")
 
 
-decode : (Bytes -> Maybe a) -> String -> Maybe a
-decode fromBytes compressed =
+decodeWith : (Int -> BD.Decoder a) -> String -> Maybe a
+decodeWith decoder compressed =
     compressed
         |> String.replace "-" "+"
         |> String.replace "." "/"
         |> String.replace "_" "="
         |> Base64.toBytes
         |> Maybe.andThen Flate.inflate
-        |> Maybe.andThen fromBytes
+        |> Maybe.andThen (\b -> BD.decode (decoder (Bytes.width b)) b)
 
 
-posixEncoder : Posix -> Bytes
+posixEncoder : Posix -> BE.Encoder
 posixEncoder date =
-    Time.posixToMillis date // 600000 |> BE.unsignedInt32 Bytes.BE |> BE.encode
+    Time.posixToMillis date // 600000 |> BE.unsignedInt32 Bytes.BE
 
 
-posixDecoder : Bytes -> Maybe Posix
-posixDecoder bytes =
-    BD.decode (BD.unsignedInt32 Bytes.BE) bytes |> Maybe.map ((*) 600000 >> Time.millisToPosix)
+posixDecoder : BD.Decoder Posix
+posixDecoder =
+    BD.unsignedInt32 Bytes.BE |> BD.map ((*) 600000 >> Time.millisToPosix)
+
+
+packedEncoder : ( Posix, String ) -> BE.Encoder
+packedEncoder ( date, text ) =
+    BE.sequence
+        [ posixEncoder date
+        , stringEncoder text
+        ]
+
+
+packedDecoder : Int -> BD.Decoder ( Posix, String )
+packedDecoder width =
+    BD.map2 Tuple.pair posixDecoder (stringDecoder (width - 4))
+
+
+encode : ( Posix, String ) -> Maybe String
+encode =
+    encodeWith packedEncoder
+
+
+decode : String -> Maybe ( Posix, String )
+decode =
+    decodeWith packedDecoder

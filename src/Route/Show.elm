@@ -34,7 +34,7 @@ type alias Options =
 init : Url -> Nav.Key -> Flags -> Options -> ( Model, Cmd Msg )
 init url key flags _ =
     ( { text =
-            flags |> Compress.decode Compress.stringDecoder |> Maybe.withDefault ""
+            flags |> Compress.decode |> Maybe.map Tuple.second |> Maybe.withDefault ""
       , url = url
       , key = key
       }

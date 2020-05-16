@@ -79,19 +79,12 @@ twitterSharingUrl text =
 
 showTextUrl : Url -> String -> Posix -> Maybe String
 showTextUrl url text date =
-    let
-        qText =
-            Compress.encode Compress.stringEncoder text
-
-        qDate =
-            Compress.encode Compress.posixEncoder date
-    in
-    Maybe.map2
-        (\t d -> [ UB.string "text" t, UB.string "d" d ] |> UB.toQuery |> String.dropLeft 1)
-        qText
-        qDate
+    Compress.encode ( date, text )
         |> Maybe.map
-            ((\q -> { url | query = Just q }) >> Url.toString)
+            ((\t -> [ UB.string "text" t ] |> UB.toQuery |> String.dropLeft 1)
+                >> (\q -> { url | query = Just q })
+                >> Url.toString
+            )
 
 
 view : Model -> Html Msg

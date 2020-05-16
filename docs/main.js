@@ -5515,24 +5515,6 @@ var $author$project$Route$Edit$init = F4(
 			},
 			$elm$core$Platform$Cmd$none);
 	});
-var $elm$bytes$Bytes$Encode$Bytes = function (a) {
-	return {$: 10, a: a};
-};
-var $elm$bytes$Bytes$Encode$bytes = $elm$bytes$Bytes$Encode$Bytes;
-var $folkertdev$elm_flate$Inflate$BitReader$decode = F2(
-	function (bytes, _v0) {
-		var reader = _v0;
-		var initialState = {d: 0, j: bytes, i: 0, g: 0, v: 0};
-		var _v1 = reader(initialState);
-		if (!_v1.$) {
-			var _v2 = _v1.a;
-			var value = _v2.a;
-			return $elm$core$Result$Ok(value);
-		} else {
-			var e = _v1.a;
-			return $elm$core$Result$Err(e);
-		}
-	});
 var $elm$bytes$Bytes$Encode$getWidth = function (builder) {
 	switch (builder.$) {
 		case 0:
@@ -5624,6 +5606,29 @@ var $elm$bytes$Bytes$Encode$writeSequence = F3(
 				offset = $temp$offset;
 				continue writeSequence;
 			}
+		}
+	});
+var $elm$bytes$Bytes$Decode$decode = F2(
+	function (_v0, bs) {
+		var decoder = _v0;
+		return A2(_Bytes_decode, decoder, bs);
+	});
+var $elm$bytes$Bytes$Encode$Bytes = function (a) {
+	return {$: 10, a: a};
+};
+var $elm$bytes$Bytes$Encode$bytes = $elm$bytes$Bytes$Encode$Bytes;
+var $folkertdev$elm_flate$Inflate$BitReader$decode = F2(
+	function (bytes, _v0) {
+		var reader = _v0;
+		var initialState = {d: 0, j: bytes, i: 0, g: 0, v: 0};
+		var _v1 = reader(initialState);
+		if (!_v1.$) {
+			var _v2 = _v1.a;
+			var value = _v2.a;
+			return $elm$core$Result$Ok(value);
+		} else {
+			var e = _v1.a;
+			return $elm$core$Result$Err(e);
 		}
 	});
 var $elm$bytes$Bytes$Encode$encode = _Bytes_encode;
@@ -6010,11 +6015,6 @@ var $folkertdev$elm_flate$Experimental$ByteArray$appendBytesHelp = function (_v0
 		$elm$bytes$Bytes$Decode$unsignedInt8) : $elm$bytes$Bytes$Decode$succeed(
 		$elm$bytes$Bytes$Decode$Done(bytearray)));
 };
-var $elm$bytes$Bytes$Decode$decode = F2(
-	function (_v0, bs) {
-		var decoder = _v0;
-		return A2(_Bytes_decode, decoder, bs);
-	});
 var $elm$bytes$Bytes$Decode$loopHelp = F4(
 	function (state, callback, bites, offset) {
 		loopHelp:
@@ -8422,11 +8422,17 @@ var $danfishgold$base64_bytes$Encode$toBytes = function (string) {
 		$danfishgold$base64_bytes$Encode$encoder(string));
 };
 var $danfishgold$base64_bytes$Base64$toBytes = $danfishgold$base64_bytes$Encode$toBytes;
-var $author$project$Compress$decode = F2(
-	function (fromBytes, compressed) {
+var $author$project$Compress$decodeWith = F2(
+	function (decoder, compressed) {
 		return A2(
 			$elm$core$Maybe$andThen,
-			fromBytes,
+			function (b) {
+				return A2(
+					$elm$bytes$Bytes$Decode$decode,
+					decoder(
+						$elm$bytes$Bytes$width(b)),
+					b);
+			},
 			A2(
 				$elm$core$Maybe$andThen,
 				$folkertdev$elm_flate$Flate$inflate,
@@ -8441,16 +8447,29 @@ var $author$project$Compress$decode = F2(
 							'/',
 							A3($elm$core$String$replace, '-', '+', compressed))))));
 	});
+var $elm$time$Time$Posix = $elm$core$Basics$identity;
+var $elm$time$Time$millisToPosix = $elm$core$Basics$identity;
+var $author$project$Compress$posixDecoder = A2(
+	$elm$bytes$Bytes$Decode$map,
+	A2(
+		$elm$core$Basics$composeR,
+		$elm$core$Basics$mul(600000),
+		$elm$time$Time$millisToPosix),
+	$elm$bytes$Bytes$Decode$unsignedInt32(1));
 var $elm$bytes$Bytes$Decode$string = function (n) {
 	return _Bytes_read_string(n);
 };
-var $author$project$Compress$stringDecoder = function (bytes) {
-	return A2(
-		$elm$bytes$Bytes$Decode$decode,
-		$elm$bytes$Bytes$Decode$string(
-			$elm$bytes$Bytes$width(bytes)),
-		bytes);
+var $author$project$Compress$stringDecoder = function (width) {
+	return $elm$bytes$Bytes$Decode$string(width);
 };
+var $author$project$Compress$packedDecoder = function (width) {
+	return A3(
+		$elm$bytes$Bytes$Decode$map2,
+		$elm$core$Tuple$pair,
+		$author$project$Compress$posixDecoder,
+		$author$project$Compress$stringDecoder(width - 4));
+};
+var $author$project$Compress$decode = $author$project$Compress$decodeWith($author$project$Compress$packedDecoder);
 var $author$project$Route$Show$init = F4(
 	function (url, key, flags, _v0) {
 		return _Utils_Tuple2(
@@ -8459,7 +8478,10 @@ var $author$project$Route$Show$init = F4(
 				N: A2(
 					$elm$core$Maybe$withDefault,
 					'',
-					A2($author$project$Compress$decode, $author$project$Compress$stringDecoder, flags)),
+					A2(
+						$elm$core$Maybe$map,
+						$elm$core$Tuple$second,
+						$author$project$Compress$decode(flags))),
 				ao: url
 			},
 			$elm$core$Platform$Cmd$none);
@@ -11602,8 +11624,8 @@ var $danfishgold$base64_bytes$Decode$fromBytes = function (bytes) {
 		bytes);
 };
 var $danfishgold$base64_bytes$Base64$fromBytes = $danfishgold$base64_bytes$Decode$fromBytes;
-var $author$project$Compress$encode = F2(
-	function (toBytes, data) {
+var $author$project$Compress$encodeWith = F2(
+	function (encoder, data) {
 		return A2(
 			$elm$core$Maybe$map,
 			A2(
@@ -11615,34 +11637,43 @@ var $author$project$Compress$encode = F2(
 					A2($elm$core$String$replace, '=', '_'))),
 			$danfishgold$base64_bytes$Base64$fromBytes(
 				$folkertdev$elm_flate$Flate$deflate(
-					toBytes(data))));
-	});
-var $elm$core$Maybe$map2 = F3(
-	function (func, ma, mb) {
-		if (ma.$ === 1) {
-			return $elm$core$Maybe$Nothing;
-		} else {
-			var a = ma.a;
-			if (mb.$ === 1) {
-				return $elm$core$Maybe$Nothing;
-			} else {
-				var b = mb.a;
-				return $elm$core$Maybe$Just(
-					A2(func, a, b));
-			}
-		}
+					$elm$bytes$Bytes$Encode$encode(
+						encoder(data)))));
 	});
 var $elm$time$Time$posixToMillis = function (_v0) {
 	var millis = _v0;
 	return millis;
 };
 var $author$project$Compress$posixEncoder = function (date) {
-	return $elm$bytes$Bytes$Encode$encode(
-		A2(
-			$elm$bytes$Bytes$Encode$unsignedInt32,
-			1,
-			($elm$time$Time$posixToMillis(date) / 600000) | 0));
+	return A2(
+		$elm$bytes$Bytes$Encode$unsignedInt32,
+		1,
+		($elm$time$Time$posixToMillis(date) / 600000) | 0);
 };
+var $elm$bytes$Bytes$Encode$Utf8 = F2(
+	function (a, b) {
+		return {$: 9, a: a, b: b};
+	});
+var $elm$bytes$Bytes$Encode$string = function (str) {
+	return A2(
+		$elm$bytes$Bytes$Encode$Utf8,
+		_Bytes_getStringWidth(str),
+		str);
+};
+var $author$project$Compress$stringEncoder = function (string) {
+	return $elm$bytes$Bytes$Encode$string(string);
+};
+var $author$project$Compress$packedEncoder = function (_v0) {
+	var date = _v0.a;
+	var text = _v0.b;
+	return $elm$bytes$Bytes$Encode$sequence(
+		_List_fromArray(
+			[
+				$author$project$Compress$posixEncoder(date),
+				$author$project$Compress$stringEncoder(text)
+			]));
+};
+var $author$project$Compress$encode = $author$project$Compress$encodeWith($author$project$Compress$packedEncoder);
 var $elm$url$Url$Builder$QueryParameter = F2(
 	function (a, b) {
 		return {$: 0, a: a, b: b};
@@ -11655,20 +11686,6 @@ var $elm$url$Url$Builder$string = F2(
 			$elm$url$Url$percentEncode(key),
 			$elm$url$Url$percentEncode(value));
 	});
-var $elm$bytes$Bytes$Encode$Utf8 = F2(
-	function (a, b) {
-		return {$: 9, a: a, b: b};
-	});
-var $elm$bytes$Bytes$Encode$string = function (str) {
-	return A2(
-		$elm$bytes$Bytes$Encode$Utf8,
-		_Bytes_getStringWidth(str),
-		str);
-};
-var $author$project$Compress$stringEncoder = function (string) {
-	return $elm$bytes$Bytes$Encode$encode(
-		$elm$bytes$Bytes$Encode$string(string));
-};
 var $elm$url$Url$Builder$toQueryPair = function (_v0) {
 	var key = _v0.a;
 	var value = _v0.b;
@@ -11686,36 +11703,32 @@ var $elm$url$Url$Builder$toQuery = function (parameters) {
 };
 var $author$project$Route$Edit$showTextUrl = F3(
 	function (url, text, date) {
-		var qText = A2($author$project$Compress$encode, $author$project$Compress$stringEncoder, text);
-		var qDate = A2($author$project$Compress$encode, $author$project$Compress$posixEncoder, date);
 		return A2(
 			$elm$core$Maybe$map,
 			A2(
 				$elm$core$Basics$composeR,
-				function (q) {
-					return _Utils_update(
-						url,
-						{
-							bi: $elm$core$Maybe$Just(q)
-						});
+				function (t) {
+					return A2(
+						$elm$core$String$dropLeft,
+						1,
+						$elm$url$Url$Builder$toQuery(
+							_List_fromArray(
+								[
+									A2($elm$url$Url$Builder$string, 'text', t)
+								])));
 				},
-				$elm$url$Url$toString),
-			A3(
-				$elm$core$Maybe$map2,
-				F2(
-					function (t, d) {
-						return A2(
-							$elm$core$String$dropLeft,
-							1,
-							$elm$url$Url$Builder$toQuery(
-								_List_fromArray(
-									[
-										A2($elm$url$Url$Builder$string, 'text', t),
-										A2($elm$url$Url$Builder$string, 'd', d)
-									])));
-					}),
-				qText,
-				qDate));
+				A2(
+					$elm$core$Basics$composeR,
+					function (q) {
+						return _Utils_update(
+							url,
+							{
+								bi: $elm$core$Maybe$Just(q)
+							});
+					},
+					$elm$url$Url$toString)),
+			$author$project$Compress$encode(
+				_Utils_Tuple2(date, text)));
 	});
 var $elm$url$Url$Builder$crossOrigin = F3(
 	function (prePath, pathSegments, parameters) {
@@ -11760,8 +11773,6 @@ var $elm$time$Time$Zone = F2(
 		return {$: 0, a: a, b: b};
 	});
 var $elm$time$Time$customZone = $elm$time$Time$Zone;
-var $elm$time$Time$Posix = $elm$core$Basics$identity;
-var $elm$time$Time$millisToPosix = $elm$core$Basics$identity;
 var $elm$time$Time$now = _Time_now($elm$time$Time$millisToPosix);
 var $author$project$Route$Edit$prepareInfo = function (text) {
 	return A2(
