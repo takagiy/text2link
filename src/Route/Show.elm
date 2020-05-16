@@ -34,7 +34,7 @@ type alias Options =
 init : Url -> Nav.Key -> Flags -> Options -> ( Model, Cmd Msg )
 init url key flags _ =
     ( { text =
-            flags |> Compress.decode |> Maybe.withDefault ""
+            flags |> Compress.decode Compress.stringDecoder |> Maybe.withDefault ""
       , url = url
       , key = key
       }
@@ -74,6 +74,9 @@ view model =
                     ]
                     [ text "New" ]
                 ]
+            , div
+                [ class "container-time" ]
+                [ span [ class "time" ] [ text "at 17:49, May 17, 2020" ] ]
             , div
                 [ class "container-text" ]
                 [ div [ class "text" ] [ text model.text ]

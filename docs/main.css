@@ -20,7 +20,8 @@ body {
   flex-direction: column;
   flex-basis: 60%;
   height: 100%;
-  max-width: 700px
+  max-width: 700px;
+  padding: 0px 0px;
 }
 
 @media (min-width: 768px) and (max-width: 1024px) {
@@ -32,6 +33,7 @@ body {
 @media (max-width: 767px) {
   .container-main {
     flex-grow: 1;
+    padding: 0px 15px;
   }
 }
 
@@ -39,7 +41,7 @@ body {
   display: flex;
   flex-direction: row;
   justify-content: flex-end;
-  padding: 10px 15px 10px;
+  margin: 5px 0px;
 }
 
 .button {
@@ -62,7 +64,7 @@ body {
   flex-direction: row-reverse;
   justify-content: center;
   flex-grow: 1;
-  padding: 0px 15px;
+  margin: 0px 0px;
 }
 
 .label-prompt {
@@ -95,4 +97,12 @@ body {
 }
 .text::-moz-placeholder {
   color: white;
+}
+
+.container-time {
+  display: flex;
+  flex-direction: row;
+  font-family: monospace;
+  font-size: 12px;
+  margin: 5px 0px;
 }

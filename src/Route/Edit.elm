@@ -6,6 +6,8 @@ import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import OutMsg exposing (OutMsg)
+import Task
+import Time exposing (Posix)
 import Url exposing (Url)
 import Url.Builder as UB
 
@@ -22,6 +24,7 @@ type Msg
     = Noop
     | Edit String
     | Tweet
+    | ShareInfoPrepared ShareInfo
 
 
 type alias Flags =
@@ -30,6 +33,12 @@ type alias Flags =
 
 type alias Options =
     Maybe String
+
+
+type alias ShareInfo =
+    { text : String
+    , date : Posix
+    }
 
 
 init : Url -> Nav.Key -> Flags -> Options -> ( Model, Cmd Msg )
@@ -47,12 +56,20 @@ update msg model =
             ( { model | text = text }, Cmd.none, OutMsg.Noop )
 
         Tweet ->
-            ( model, loadTwitterSharing model, OutMsg.Noop )
+            ( model, prepareInfo model.text, OutMsg.Noop )
+
+        ShareInfoPrepared info ->
+            ( model, loadTwitterSharing model info, OutMsg.Noop )
 
 
-loadTwitterSharing : Model -> Cmd Msg
-loadTwitterSharing model =
-    showTextUrl model.url model.text |> Maybe.map (Nav.load << twitterSharingUrl) |> Maybe.withDefault Cmd.none
+prepareInfo : String -> Cmd Msg
+prepareInfo text =
+    Task.perform ShareInfoPrepared (Task.map (ShareInfo text) Time.now)
+
+
+loadTwitterSharing : Model -> ShareInfo -> Cmd Msg
+loadTwitterSharing model info =
+    showTextUrl model.url info.text info.date |> Maybe.map (Nav.load << twitterSharingUrl) |> Maybe.withDefault Cmd.none
 
 
 twitterSharingUrl : String -> String
@@ -60,14 +77,21 @@ twitterSharingUrl text =
     UB.crossOrigin "https://twitter.com" [ "intent", "tweet" ] [ UB.string "text" text ]
 
 
-showTextUrl : Url -> String -> Maybe String
-showTextUrl url text =
-    Compress.encode text
+showTextUrl : Url -> String -> Posix -> Maybe String
+showTextUrl url text date =
+    let
+        qText =
+            Compress.encode Compress.stringEncoder text
+
+        qDate =
+            Compress.encode Compress.posixEncoder date
+    in
+    Maybe.map2
+        (\t d -> [ UB.string "text" t, UB.string "d" d ] |> UB.toQuery |> String.dropLeft 1)
+        qText
+        qDate
         |> Maybe.map
-            ((\t -> [ UB.string "text" t ] |> UB.toQuery |> String.dropLeft 1)
-                >> (\q -> { url | query = Just q })
-                >> Url.toString
-            )
+            ((\q -> { url | query = Just q }) >> Url.toString)
 
 
 view : Model -> Html Msg
