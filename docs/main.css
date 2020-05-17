@@ -1,9 +1,13 @@
+* {
+  box-sizing: border-box;
+}
+
 html {
-  height: 100%;
+  min-height: 100%;
 }
 
 body {
-  height: 100%;
+  min-height: 100%;
   margin: 0px;
   padding: 0px;
 }
@@ -26,6 +30,7 @@ body {
 
 @media (min-width: 768px) and (max-width: 1024px) {
   .container-main {
+    width: 70%;
     flex-basis: 70%;
   }
 }
@@ -33,6 +38,7 @@ body {
 @media (max-width: 767px) {
   .container-main {
     flex-grow: 1;
+    width: 100%;
     padding: 0px 15px;
   }
 }
@@ -60,6 +66,7 @@ body {
 }
 
 .container-text {
+  width: 100%;
   display: flex;
   flex-direction: row-reverse;
   justify-content: center;
@@ -81,15 +88,22 @@ body {
 }
 
 .text {
+  width: 100%;
   padding: 0px;
-  appearance: none;
-  resize: none;
-  outline: none;
   border: none;
   flex-grow: 1;
   font-family: monospace;
   font-size: 14px;
   white-space: pre-wrap;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  hyphens: auto;
+}
+
+textarea.text {
+  appearance: none;
+  resize: none;
+  outline: none;
 }
 
 ::-webkit-input-placeholder, ::placeholder {

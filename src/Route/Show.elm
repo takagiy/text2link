@@ -99,8 +99,7 @@ view model =
             , viewDate model.date
             , div
                 [ class "container-text" ]
-                [ div [ class "text" ] [ text model.text ]
-                ]
+                [ div [ class "text" ] [ text model.text ] ]
             ]
         ]
 
