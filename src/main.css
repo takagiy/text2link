@@ -1,0 +1,121 @@
+* {
+  box-sizing: border-box;
+}
+
+html {
+  height: 100%;
+}
+
+body {
+  min-height: 100%;
+  margin: 0px;
+  padding: 0px;
+}
+
+.container-screen {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  min-height: 100vh;
+}
+
+.container-main {
+  display: flex;
+  flex-direction: column;
+  flex-basis: 60%;
+  max-width: 700px;
+  padding: 0px 0px;
+}
+
+@media (min-width: 768px) and (max-width: 1024px) {
+  .container-main {
+    width: 70%;
+    flex-basis: 70%;
+  }
+}
+
+@media (max-width: 767px) {
+  .container-main {
+    flex-grow: 1;
+    width: 100%;
+    padding: 0px 15px;
+  }
+}
+
+.container-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  margin: 5px 0px;
+}
+
+.button {
+  height: 30px;
+  padding: 0px 15px;
+  margin: 3px;
+  border: solid;
+  border-radius: 15px;
+  border-width: 2px;
+  background: none;
+  letter-spacing: 1px;
+  font-family: sans-serif;
+  font-weight: bold;
+  appearance: none;
+  outline: none;
+}
+
+.container-text {
+  width: 100%;
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: center;
+  flex-grow: 1;
+  margin: 0px 0px;
+}
+
+.label-prompt {
+  font-family: monospace;
+  font-size: 14px;
+}
+
+.text:placeholder-shown + .label-prompt {
+  visibility: visible
+}
+
+.text:not(:placeholder-shown) + .label-prompt {
+  visibility: hidden
+}
+
+.text {
+  width: 100%;
+  padding: 0px;
+  border: none;
+  flex-grow: 1;
+  font-family: monospace;
+  font-size: 14px;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  hyphens: auto;
+}
+
+textarea.text {
+  appearance: none;
+  resize: none;
+  outline: none;
+}
+
+::-webkit-input-placeholder, ::placeholder {
+  color: white;
+}
+.text::-moz-placeholder {
+  color: white;
+}
+
+.container-time {
+  display: flex;
+  flex-direction: row;
+  font-family: monospace;
+  font-size: 12px;
+  margin: 5px 0px;
+}

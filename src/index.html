@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+  <meta property="og:title" content="text2link">
+  <meta property="og:url" content="https://takagiy.github.io/text2link/">
+  <meta property="og:type" content="article">
+  <meta property="og:description" content="Imaginary loose leaf to share text as URL">
+  <meta property="twitter:card" content="summary">
+  <title>text2link</title>
+  <meta name="description" content="Imaginary loose leaf to share text as URL">
+  <link rel="stylesheet" href="main.css">
+  <script src="main.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/autosize@4.0.2/dist/autosize.min.js"></script>
+  <!--
+%third_party_notice%
+  -->
+</head>
+
+<body>
+  <script>var app = Elm.Main.init();</script>
+  <script>
+    var observer = new MutationObserver((mutation) => {
+      autosize(document.querySelectorAll('textarea'));
+    });
+
+    observer.observe(document.body, {childList: true, subtree: true});
+  </script>
+</body>
+
+</html>
