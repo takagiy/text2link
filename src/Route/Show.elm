@@ -2,6 +2,7 @@ module Route.Show exposing (Flags, Model, Msg, Options, init, update, view)
 
 import Browser.Navigation as Nav
 import Compress
+import Compress.Format as Format
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
@@ -28,7 +29,7 @@ type Msg
 
 
 type alias Flags =
-    String
+    ( String, Maybe Format.Version )
 
 
 type alias Options =
@@ -42,10 +43,10 @@ type alias DateInfo =
 
 
 init : Url -> Nav.Key -> Flags -> Options -> ( Model, Cmd Msg )
-init url key flags _ =
+init url key ( text, versionHint ) _ =
     let
         data =
-            Compress.decode flags
+            Compress.decode versionHint text
 
         date =
             Maybe.map Tuple.first data

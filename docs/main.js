@@ -5522,6 +5522,7 @@ var $author$project$Route$Show$DateInfo = F2(
 var $author$project$Route$Show$DatePrepared = function (a) {
 	return {$: 3, a: a};
 };
+var $author$project$Compress$Format$V2 = 1;
 var $elm$bytes$Bytes$Encode$getWidth = function (builder) {
 	switch (builder.$) {
 		case 0:
@@ -8239,13 +8240,6 @@ var $folkertdev$elm_flate$Inflate$Inflate$inflate = function (buffer) {
 	}
 };
 var $folkertdev$elm_flate$Flate$inflate = $folkertdev$elm_flate$Inflate$Inflate$inflate;
-var $elm$core$String$replace = F3(
-	function (before, after, string) {
-		return A2(
-			$elm$core$String$join,
-			after,
-			A2($elm$core$String$split, before, string));
-	});
 var $danfishgold$base64_bytes$Encode$isValidChar = function (c) {
 	if ($elm$core$Char$isAlphaNum(c)) {
 		return true;
@@ -8429,8 +8423,8 @@ var $danfishgold$base64_bytes$Encode$toBytes = function (string) {
 		$danfishgold$base64_bytes$Encode$encoder(string));
 };
 var $danfishgold$base64_bytes$Base64$toBytes = $danfishgold$base64_bytes$Encode$toBytes;
-var $author$project$Compress$decodeWith = F2(
-	function (decoder, compressed) {
+var $author$project$Compress$decodeWith = F3(
+	function (queryDecoder, decoder, compressed) {
 		return A2(
 			$elm$core$Maybe$andThen,
 			function (b) {
@@ -8444,12 +8438,9 @@ var $author$project$Compress$decodeWith = F2(
 				$elm$core$Maybe$andThen,
 				$folkertdev$elm_flate$Flate$inflate,
 				$danfishgold$base64_bytes$Base64$toBytes(
-					A3(
-						$elm$core$String$replace,
-						'_',
-						'/',
-						A3($elm$core$String$replace, '-', '+', compressed)))));
+					queryDecoder(compressed))));
 	});
+var $author$project$Compress$Format$V1 = 0;
 var $elm$time$Time$Posix = $elm$core$Basics$identity;
 var $elm$time$Time$millisToPosix = $elm$core$Basics$identity;
 var $author$project$Compress$Format$V2$posixDecoder = A2(
@@ -8474,29 +8465,74 @@ var $author$project$Compress$Format$V2$decoder = function (width) {
 };
 var $author$project$Compress$selectDecoder = F2(
 	function (width, version) {
-		if (!version) {
-			return $author$project$Compress$Format$V2$decoder(width - 1);
-		} else {
-			return $author$project$Compress$Format$V2$decoder(width - 1);
+		switch (version) {
+			case 0:
+				return $author$project$Compress$Format$V2$decoder(width);
+			case 1:
+				return $author$project$Compress$Format$V2$decoder(width);
+			default:
+				return $author$project$Compress$Format$V2$decoder(width);
 		}
 	});
-var $author$project$Compress$Format$Unknown = 1;
-var $author$project$Compress$Format$V2 = 0;
+var $author$project$Compress$Format$Unknown = 2;
 var $author$project$Compress$Format$intToVersion = function (v) {
-	if (v === 2) {
-		return 0;
-	} else {
-		return 1;
+	switch (v) {
+		case 1:
+			return 0;
+		case 2:
+			return 1;
+		default:
+			return 2;
 	}
 };
 var $author$project$Compress$versionDecoder = A2($elm$bytes$Bytes$Decode$map, $author$project$Compress$Format$intToVersion, $elm$bytes$Bytes$Decode$unsignedInt8);
-var $author$project$Compress$formatDecoder = function (width) {
-	return A2(
-		$elm$bytes$Bytes$Decode$andThen,
-		$author$project$Compress$selectDecoder(width),
-		$author$project$Compress$versionDecoder);
+var $author$project$Compress$formatDecoder = F2(
+	function (versionHint, width) {
+		if ((!versionHint.$) && (!versionHint.a)) {
+			var _v1 = versionHint.a;
+			return A2($author$project$Compress$selectDecoder, width, 0);
+		} else {
+			return A2(
+				$elm$bytes$Bytes$Decode$andThen,
+				$author$project$Compress$selectDecoder(width - 1),
+				$author$project$Compress$versionDecoder);
+		}
+	});
+var $elm$core$String$replace = F3(
+	function (before, after, string) {
+		return A2(
+			$elm$core$String$join,
+			after,
+			A2($elm$core$String$split, before, string));
+	});
+var $author$project$Compress$QueryDecoder$v1 = A2(
+	$elm$core$Basics$composeR,
+	A2($elm$core$String$replace, '-', '+'),
+	A2(
+		$elm$core$Basics$composeR,
+		A2($elm$core$String$replace, '.', '/'),
+		A2($elm$core$String$replace, '_', '=')));
+var $author$project$Compress$QueryDecoder$v2 = A2(
+	$elm$core$Basics$composeR,
+	A2($elm$core$String$replace, '-', '+'),
+	A2($elm$core$String$replace, '_', '/'));
+var $author$project$Compress$QueryDecoder$fromVersion = function (version) {
+	switch (version) {
+		case 0:
+			return $author$project$Compress$QueryDecoder$v1;
+		case 1:
+			return $author$project$Compress$QueryDecoder$v2;
+		default:
+			return $author$project$Compress$QueryDecoder$v2;
+	}
 };
-var $author$project$Compress$decode = $author$project$Compress$decodeWith($author$project$Compress$formatDecoder);
+var $author$project$Compress$decode = function (versionHint) {
+	return A2(
+		$author$project$Compress$decodeWith,
+		$author$project$Compress$QueryDecoder$fromVersion(
+			A2($elm$core$Maybe$withDefault, 1, versionHint)),
+		$author$project$Compress$formatDecoder(versionHint));
+};
 var $elm$time$Time$Name = function (a) {
 	return {$: 0, a: a};
 };
@@ -8510,8 +8546,10 @@ var $elm$time$Time$Zone = F2(
 var $elm$time$Time$customZone = $elm$time$Time$Zone;
 var $elm$time$Time$here = _Time_here(0);
 var $author$project$Route$Show$init = F4(
-	function (url, key, flags, _v0) {
-		var data = $author$project$Compress$decode(flags);
+	function (url, key, _v0, _v1) {
+		var text = _v0.a;
+		var versionHint = _v0.b;
+		var data = A2($author$project$Compress$decode, versionHint, text);
 		var date = A2($elm$core$Maybe$map, $elm$core$Tuple$first, data);
 		return _Utils_Tuple2(
 			{
@@ -8576,14 +8614,6 @@ var $elm$url$Url$Parser$Query$map2 = F3(
 				a(dict),
 				b(dict));
 		};
-	});
-var $elm_community$maybe_extra$Maybe$Extra$or = F2(
-	function (ma, mb) {
-		if (ma.$ === 1) {
-			return mb;
-		} else {
-			return ma;
-		}
 	});
 var $elm$url$Url$Parser$State = F5(
 	function (visited, unvisited, params, frag, value) {
@@ -8760,6 +8790,24 @@ var $elm$url$Url$Parser$questionMark = F2(
 			parser,
 			$elm$url$Url$Parser$query(queryParser));
 	});
+var $author$project$Route$selectQuery = F2(
+	function (t, text_) {
+		if (!t.$) {
+			var txt = t.a;
+			return $elm$core$Maybe$Just(
+				_Utils_Tuple2(txt, $elm$core$Maybe$Nothing));
+		} else {
+			if (!text_.$) {
+				var txt = text_.a;
+				return $elm$core$Maybe$Just(
+					_Utils_Tuple2(
+						txt,
+						$elm$core$Maybe$Just(0)));
+			} else {
+				return $elm$core$Maybe$Nothing;
+			}
+		}
+	});
 var $elm$url$Url$Parser$Query$custom = F2(
 	function (key, func) {
 		return function (dict) {
@@ -8798,7 +8846,7 @@ var $author$project$Route$text = function (url) {
 				$elm$url$Url$Parser$top,
 				A3(
 					$elm$url$Url$Parser$Query$map2,
-					$elm_community$maybe_extra$Maybe$Extra$or,
+					$author$project$Route$selectQuery,
 					$elm$url$Url$Parser$Query$string('t'),
 					$elm$url$Url$Parser$Query$string('text'))),
 			_Utils_update(
@@ -11692,17 +11740,11 @@ var $danfishgold$base64_bytes$Decode$fromBytes = function (bytes) {
 		bytes);
 };
 var $danfishgold$base64_bytes$Base64$fromBytes = $danfishgold$base64_bytes$Decode$fromBytes;
-var $author$project$Compress$encodeWith = F2(
-	function (encoder, data) {
+var $author$project$Compress$encodeWith = F3(
+	function (queryEncoder, encoder, data) {
 		return A2(
 			$elm$core$Maybe$map,
-			A2(
-				$elm$core$Basics$composeR,
-				A2($elm$core$String$replace, '+', '-'),
-				A2(
-					$elm$core$Basics$composeR,
-					A2($elm$core$String$replace, '/', '_'),
-					A2($elm$core$String$replace, '=', ''))),
+			queryEncoder,
 			$danfishgold$base64_bytes$Base64$fromBytes(
 				$folkertdev$elm_flate$Flate$deflate(
 					$elm$bytes$Bytes$Encode$encode(
@@ -11742,17 +11784,23 @@ var $author$project$Compress$Format$V2$encoder = function (_v0) {
 			]));
 };
 var $author$project$Compress$selectEncoder = function (version) {
-	if (!version) {
-		return $author$project$Compress$Format$V2$encoder;
-	} else {
-		return $author$project$Compress$Format$V2$encoder;
+	switch (version) {
+		case 0:
+			return $author$project$Compress$Format$V2$encoder;
+		case 1:
+			return $author$project$Compress$Format$V2$encoder;
+		default:
+			return $author$project$Compress$Format$V2$encoder;
 	}
 };
 var $author$project$Compress$Format$versionToInt = function (v) {
-	if (!v) {
-		return 2;
-	} else {
-		return 0;
+	switch (v) {
+		case 0:
+			return 1;
+		case 1:
+			return 2;
+		default:
+			return 0;
 	}
 };
 var $author$project$Compress$versionEncoder = function (version) {
@@ -11768,8 +11816,31 @@ var $author$project$Compress$formatEncoder = F2(
 					A2($author$project$Compress$selectEncoder, version, data)
 				]));
 	});
+var $author$project$Compress$QueryEncoder$v1 = A2(
+	$elm$core$Basics$composeR,
+	A2($elm$core$String$replace, '+', '-'),
+	A2(
+		$elm$core$Basics$composeR,
+		A2($elm$core$String$replace, '/', '.'),
+		A2($elm$core$String$replace, '=', '')));
+var $author$project$Compress$QueryEncoder$v2 = A2(
+	$elm$core$Basics$composeR,
+	A2($elm$core$String$replace, '+', '-'),
+	A2($elm$core$String$replace, '/', '_'));
+var $author$project$Compress$QueryEncoder$fromVersion = function (version) {
+	switch (version) {
+		case 0:
+			return $author$project$Compress$QueryEncoder$v1;
+		case 1:
+			return $author$project$Compress$QueryEncoder$v2;
+		default:
+			return $author$project$Compress$QueryEncoder$v2;
+	}
+};
 var $author$project$Compress$encode = function (version) {
-	return $author$project$Compress$encodeWith(
+	return A2(
+		$author$project$Compress$encodeWith,
+		$author$project$Compress$QueryEncoder$fromVersion(version),
 		$author$project$Compress$formatEncoder(version));
 };
 var $elm$url$Url$Builder$QueryParameter = F2(
@@ -11827,7 +11898,7 @@ var $author$project$Route$Edit$showTextUrl = F3(
 					$elm$url$Url$toString)),
 			A2(
 				$author$project$Compress$encode,
-				0,
+				1,
 				_Utils_Tuple2(date, text)));
 	});
 var $elm$url$Url$Builder$crossOrigin = F3(

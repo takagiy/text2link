@@ -1,5 +1,6 @@
 module Route exposing (Options(..), Route(..), getEditOptions, getShowOptions, route)
 
+import Compress.Format as Format
 import Maybe.Extra as Maybe
 import Route.Edit
 import Route.Show
@@ -13,12 +14,27 @@ type Route
     | Edit Route.Edit.Flags
 
 
-text : Url -> Maybe String
+text : Url -> Maybe ( String, Maybe Format.Version )
 text url =
     parse
-        (top <?> Query.map2 Maybe.or (Query.string "t") (Query.string "text"))
+        (top <?> Query.map2 selectQuery (Query.string "t") (Query.string "text"))
         { url | path = "" }
         |> Maybe.withDefault Nothing
+
+
+selectQuery : Maybe String -> Maybe String -> Maybe ( String, Maybe Format.Version )
+selectQuery t text_ =
+    case t of
+        Just txt ->
+            Just ( txt, Nothing )
+
+        Nothing ->
+            case text_ of
+                Just txt ->
+                    Just ( txt, Just Format.V1 )
+
+                Nothing ->
+                    Nothing
 
 
 route : Url -> Route

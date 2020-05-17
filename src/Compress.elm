@@ -6,26 +6,26 @@ import Bytes.Decode as BD
 import Bytes.Encode as BE
 import Compress.Format as Format
 import Compress.Format.V2 as V2
+import Compress.QueryDecoder as QD
+import Compress.QueryEncoder as QE
 import Flate
 import Time exposing (Posix)
 
 
-encodeWith : (a -> BE.Encoder) -> a -> Maybe String
-encodeWith encoder data =
+encodeWith : (String -> String) -> (a -> BE.Encoder) -> a -> Maybe String
+encodeWith queryEncoder encoder data =
     data
         |> encoder
         |> BE.encode
         |> Flate.deflate
         |> Base64.fromBytes
-        |> Maybe.map
-            (String.replace "+" "-" >> String.replace "/" "_" >> String.replace "=" "")
+        |> Maybe.map queryEncoder
 
 
-decodeWith : (Int -> BD.Decoder a) -> String -> Maybe a
-decodeWith decoder compressed =
+decodeWith : (String -> String) -> (Int -> BD.Decoder a) -> String -> Maybe a
+decodeWith queryDecoder decoder compressed =
     compressed
-        |> String.replace "-" "+"
-        |> String.replace "_" "/"
+        |> queryDecoder
         |> Base64.toBytes
         |> Maybe.andThen Flate.inflate
         |> Maybe.andThen (\b -> BD.decode (decoder (Bytes.width b)) b)
@@ -33,7 +33,7 @@ decodeWith decoder compressed =
 
 encode : Format.Version -> ( Posix, String ) -> Maybe String
 encode version =
-    encodeWith (formatEncoder version)
+    encodeWith (QE.fromVersion version) (formatEncoder version)
 
 
 formatEncoder : Format.Version -> ( Posix, String ) -> BE.Encoder
@@ -52,6 +52,9 @@ versionEncoder version =
 selectEncoder : Format.Version -> ( Posix, String ) -> BE.Encoder
 selectEncoder version =
     case version of
+        Format.V1 ->
+            V2.encoder
+
         Format.V2 ->
             V2.encoder
 
@@ -59,14 +62,19 @@ selectEncoder version =
             V2.encoder
 
 
-decode : String -> Maybe ( Posix, String )
-decode =
-    decodeWith formatDecoder
+decode : Maybe Format.Version -> String -> Maybe ( Posix, String )
+decode versionHint =
+    decodeWith (QD.fromVersion (Maybe.withDefault Format.V2 versionHint)) (formatDecoder versionHint)
 
 
-formatDecoder : Int -> BD.Decoder ( Posix, String )
-formatDecoder width =
-    versionDecoder |> BD.andThen (selectDecoder width)
+formatDecoder : Maybe Format.Version -> Int -> BD.Decoder ( Posix, String )
+formatDecoder versionHint width =
+    case versionHint of
+        Just Format.V1 ->
+            selectDecoder width Format.V1
+
+        _ ->
+            versionDecoder |> BD.andThen (selectDecoder (width - 1))
 
 
 versionDecoder : BD.Decoder Format.Version
@@ -77,8 +85,11 @@ versionDecoder =
 selectDecoder : Int -> Format.Version -> BD.Decoder ( Posix, String )
 selectDecoder width version =
     case version of
+        Format.V1 ->
+            V2.decoder width
+
         Format.V2 ->
-            V2.decoder (width - 1)
+            V2.decoder width
 
         Format.Unknown ->
-            V2.decoder (width - 1)
+            V2.decoder width
