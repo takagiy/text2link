@@ -8545,6 +8545,26 @@ var $author$project$Route$Edit = function (a) {
 var $author$project$Route$Show = function (a) {
 	return {$: 0, a: a};
 };
+var $elm$url$Url$Parser$Internal$Parser = $elm$core$Basics$identity;
+var $elm$url$Url$Parser$Query$map2 = F3(
+	function (func, _v0, _v1) {
+		var a = _v0;
+		var b = _v1;
+		return function (dict) {
+			return A2(
+				func,
+				a(dict),
+				b(dict));
+		};
+	});
+var $elm_community$maybe_extra$Maybe$Extra$or = F2(
+	function (ma, mb) {
+		if (ma.$ === 1) {
+			return mb;
+		} else {
+			return ma;
+		}
+	});
 var $elm$url$Url$Parser$State = F5(
 	function (visited, unvisited, params, frag, value) {
 		return {D: frag, F: params, A: unvisited, w: value, J: visited};
@@ -8720,7 +8740,6 @@ var $elm$url$Url$Parser$questionMark = F2(
 			parser,
 			$elm$url$Url$Parser$query(queryParser));
 	});
-var $elm$url$Url$Parser$Internal$Parser = $elm$core$Basics$identity;
 var $elm$url$Url$Parser$Query$custom = F2(
 	function (key, func) {
 		return function (dict) {
@@ -8757,7 +8776,11 @@ var $author$project$Route$text = function (url) {
 			A2(
 				$elm$url$Url$Parser$questionMark,
 				$elm$url$Url$Parser$top,
-				$elm$url$Url$Parser$Query$string('text')),
+				A3(
+					$elm$url$Url$Parser$Query$map2,
+					$elm_community$maybe_extra$Maybe$Extra$or,
+					$elm$url$Url$Parser$Query$string('t'),
+					$elm$url$Url$Parser$Query$string('text'))),
 			_Utils_update(
 				url,
 				{bj: ''})));
@@ -11739,7 +11762,7 @@ var $author$project$Route$Edit$showTextUrl = F3(
 						$elm$url$Url$Builder$toQuery(
 							_List_fromArray(
 								[
-									A2($elm$url$Url$Builder$string, 'text', t)
+									A2($elm$url$Url$Builder$string, 't', t)
 								])));
 				},
 				A2(

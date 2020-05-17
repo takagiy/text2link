@@ -1,5 +1,6 @@
 module Route exposing (Options(..), Route(..), getEditOptions, getShowOptions, route)
 
+import Maybe.Extra as Maybe
 import Route.Edit
 import Route.Show
 import Url exposing (Url)
@@ -15,7 +16,7 @@ type Route
 text : Url -> Maybe String
 text url =
     parse
-        (top <?> Query.string "text")
+        (top <?> Query.map2 Maybe.or (Query.string "t") (Query.string "text"))
         { url | path = "" }
         |> Maybe.withDefault Nothing
 

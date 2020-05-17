@@ -81,7 +81,7 @@ showTextUrl : Url -> String -> Posix -> Maybe String
 showTextUrl url text date =
     Compress.encode ( date, text )
         |> Maybe.map
-            ((\t -> [ UB.string "text" t ] |> UB.toQuery |> String.dropLeft 1)
+            ((\t -> [ UB.string "t" t ] |> UB.toQuery |> String.dropLeft 1)
                 >> (\q -> { url | query = Just q })
                 >> Url.toString
             )
