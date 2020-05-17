@@ -26,7 +26,7 @@ encodeWith encoder data =
         |> Flate.deflate
         |> Base64.fromBytes
         |> Maybe.map
-            (String.replace "+" "-" >> String.replace "/" "." >> String.replace "=" "_")
+            (String.replace "+" "-" >> String.replace "/" "." >> String.replace "=" "")
 
 
 decodeWith : (Int -> BD.Decoder a) -> String -> Maybe a

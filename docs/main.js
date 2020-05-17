@@ -11682,7 +11682,7 @@ var $author$project$Compress$encodeWith = F2(
 				A2(
 					$elm$core$Basics$composeR,
 					A2($elm$core$String$replace, '/', '.'),
-					A2($elm$core$String$replace, '=', '_'))),
+					A2($elm$core$String$replace, '=', ''))),
 			$danfishgold$base64_bytes$Base64$fromBytes(
 				$folkertdev$elm_flate$Flate$deflate(
 					$elm$bytes$Bytes$Encode$encode(
