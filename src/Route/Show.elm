@@ -139,44 +139,42 @@ formatDate zone date =
 
 formatMonth : Time.Zone -> Posix -> String
 formatMonth zone date =
-    (case Time.toMonth zone date of
+    case Time.toMonth zone date of
         Time.Jan ->
-            "Jan"
+            "Jan."
 
         Time.Feb ->
-            "Feb"
+            "Feb."
 
         Time.Mar ->
-            "Mar"
+            "Mar."
 
         Time.Apr ->
-            "Apr"
+            "Apr."
 
         Time.May ->
             "May"
 
         Time.Jun ->
-            "Jun"
+            "Jun."
 
         Time.Jul ->
-            "Jul"
+            "Jul."
 
         Time.Aug ->
-            "Aug"
+            "Aug."
 
         Time.Sep ->
-            "Sep"
+            "Sep."
 
         Time.Oct ->
-            "Oct"
+            "Oct."
 
         Time.Nov ->
-            "Nov"
+            "Nov."
 
         Time.Dec ->
-            "Dec"
-    )
-        ++ "."
+            "Dec."
 
 
 padZero : String -> String

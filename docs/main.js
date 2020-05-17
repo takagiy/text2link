@@ -12072,35 +12072,33 @@ var $elm$time$Time$toMonth = F2(
 	});
 var $author$project$Route$Show$formatMonth = F2(
 	function (zone, date) {
-		return function () {
-			var _v0 = A2($elm$time$Time$toMonth, zone, date);
-			switch (_v0) {
-				case 0:
-					return 'Jan';
-				case 1:
-					return 'Feb';
-				case 2:
-					return 'Mar';
-				case 3:
-					return 'Apr';
-				case 4:
-					return 'May';
-				case 5:
-					return 'Jun';
-				case 6:
-					return 'Jul';
-				case 7:
-					return 'Aug';
-				case 8:
-					return 'Sep';
-				case 9:
-					return 'Oct';
-				case 10:
-					return 'Nov';
-				default:
-					return 'Dec';
-			}
-		}() + '.';
+		var _v0 = A2($elm$time$Time$toMonth, zone, date);
+		switch (_v0) {
+			case 0:
+				return 'Jan.';
+			case 1:
+				return 'Feb.';
+			case 2:
+				return 'Mar.';
+			case 3:
+				return 'Apr.';
+			case 4:
+				return 'May';
+			case 5:
+				return 'Jun.';
+			case 6:
+				return 'Jul.';
+			case 7:
+				return 'Aug.';
+			case 8:
+				return 'Sep.';
+			case 9:
+				return 'Oct.';
+			case 10:
+				return 'Nov.';
+			default:
+				return 'Dec.';
+		}
 	});
 var $elm$core$String$repeatHelp = F3(
 	function (n, chunk, result) {
