@@ -8447,16 +8447,12 @@ var $author$project$Compress$decodeWith = F2(
 					A3(
 						$elm$core$String$replace,
 						'_',
-						'=',
-						A3(
-							$elm$core$String$replace,
-							'.',
-							'/',
-							A3($elm$core$String$replace, '-', '+', compressed))))));
+						'/',
+						A3($elm$core$String$replace, '-', '+', compressed)))));
 	});
 var $elm$time$Time$Posix = $elm$core$Basics$identity;
 var $elm$time$Time$millisToPosix = $elm$core$Basics$identity;
-var $author$project$Compress$posixDecoder = A2(
+var $author$project$Compress$Format$V2$posixDecoder = A2(
 	$elm$bytes$Bytes$Decode$map,
 	A2(
 		$elm$core$Basics$composeR,
@@ -8466,17 +8462,41 @@ var $author$project$Compress$posixDecoder = A2(
 var $elm$bytes$Bytes$Decode$string = function (n) {
 	return _Bytes_read_string(n);
 };
-var $author$project$Compress$stringDecoder = function (width) {
+var $author$project$Compress$Format$V2$stringDecoder = function (width) {
 	return $elm$bytes$Bytes$Decode$string(width);
 };
-var $author$project$Compress$packedDecoder = function (width) {
+var $author$project$Compress$Format$V2$decoder = function (width) {
 	return A3(
 		$elm$bytes$Bytes$Decode$map2,
 		$elm$core$Tuple$pair,
-		$author$project$Compress$posixDecoder,
-		$author$project$Compress$stringDecoder(width - 4));
+		$author$project$Compress$Format$V2$posixDecoder,
+		$author$project$Compress$Format$V2$stringDecoder(width - 4));
 };
-var $author$project$Compress$decode = $author$project$Compress$decodeWith($author$project$Compress$packedDecoder);
+var $author$project$Compress$selectDecoder = F2(
+	function (width, version) {
+		if (!version) {
+			return $author$project$Compress$Format$V2$decoder(width - 1);
+		} else {
+			return $author$project$Compress$Format$V2$decoder(width - 1);
+		}
+	});
+var $author$project$Compress$Format$Unknown = 1;
+var $author$project$Compress$Format$V2 = 0;
+var $author$project$Compress$Format$intToVersion = function (v) {
+	if (v === 2) {
+		return 0;
+	} else {
+		return 1;
+	}
+};
+var $author$project$Compress$versionDecoder = A2($elm$bytes$Bytes$Decode$map, $author$project$Compress$Format$intToVersion, $elm$bytes$Bytes$Decode$unsignedInt8);
+var $author$project$Compress$formatDecoder = function (width) {
+	return A2(
+		$elm$bytes$Bytes$Decode$andThen,
+		$author$project$Compress$selectDecoder(width),
+		$author$project$Compress$versionDecoder);
+};
+var $author$project$Compress$decode = $author$project$Compress$decodeWith($author$project$Compress$formatDecoder);
 var $elm$time$Time$Name = function (a) {
 	return {$: 0, a: a};
 };
@@ -11681,7 +11701,7 @@ var $author$project$Compress$encodeWith = F2(
 				A2($elm$core$String$replace, '+', '-'),
 				A2(
 					$elm$core$Basics$composeR,
-					A2($elm$core$String$replace, '/', '.'),
+					A2($elm$core$String$replace, '/', '_'),
 					A2($elm$core$String$replace, '=', ''))),
 			$danfishgold$base64_bytes$Base64$fromBytes(
 				$folkertdev$elm_flate$Flate$deflate(
@@ -11692,7 +11712,7 @@ var $elm$time$Time$posixToMillis = function (_v0) {
 	var millis = _v0;
 	return millis;
 };
-var $author$project$Compress$posixEncoder = function (date) {
+var $author$project$Compress$Format$V2$posixEncoder = function (date) {
 	return A2(
 		$elm$bytes$Bytes$Encode$unsignedInt32,
 		1,
@@ -11708,20 +11728,50 @@ var $elm$bytes$Bytes$Encode$string = function (str) {
 		_Bytes_getStringWidth(str),
 		str);
 };
-var $author$project$Compress$stringEncoder = function (string) {
+var $author$project$Compress$Format$V2$stringEncoder = function (string) {
 	return $elm$bytes$Bytes$Encode$string(string);
 };
-var $author$project$Compress$packedEncoder = function (_v0) {
+var $author$project$Compress$Format$V2$encoder = function (_v0) {
 	var date = _v0.a;
 	var text = _v0.b;
 	return $elm$bytes$Bytes$Encode$sequence(
 		_List_fromArray(
 			[
-				$author$project$Compress$posixEncoder(date),
-				$author$project$Compress$stringEncoder(text)
+				$author$project$Compress$Format$V2$posixEncoder(date),
+				$author$project$Compress$Format$V2$stringEncoder(text)
 			]));
 };
-var $author$project$Compress$encode = $author$project$Compress$encodeWith($author$project$Compress$packedEncoder);
+var $author$project$Compress$selectEncoder = function (version) {
+	if (!version) {
+		return $author$project$Compress$Format$V2$encoder;
+	} else {
+		return $author$project$Compress$Format$V2$encoder;
+	}
+};
+var $author$project$Compress$Format$versionToInt = function (v) {
+	if (!v) {
+		return 2;
+	} else {
+		return 0;
+	}
+};
+var $author$project$Compress$versionEncoder = function (version) {
+	return $elm$bytes$Bytes$Encode$unsignedInt8(
+		$author$project$Compress$Format$versionToInt(version));
+};
+var $author$project$Compress$formatEncoder = F2(
+	function (version, data) {
+		return $elm$bytes$Bytes$Encode$sequence(
+			_List_fromArray(
+				[
+					$author$project$Compress$versionEncoder(version),
+					A2($author$project$Compress$selectEncoder, version, data)
+				]));
+	});
+var $author$project$Compress$encode = function (version) {
+	return $author$project$Compress$encodeWith(
+		$author$project$Compress$formatEncoder(version));
+};
 var $elm$url$Url$Builder$QueryParameter = F2(
 	function (a, b) {
 		return {$: 0, a: a, b: b};
@@ -11775,7 +11825,9 @@ var $author$project$Route$Edit$showTextUrl = F3(
 							});
 					},
 					$elm$url$Url$toString)),
-			$author$project$Compress$encode(
+			A2(
+				$author$project$Compress$encode,
+				0,
 				_Utils_Tuple2(date, text)));
 	});
 var $elm$url$Url$Builder$crossOrigin = F3(

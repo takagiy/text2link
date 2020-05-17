@@ -2,6 +2,7 @@ module Route.Edit exposing (Flags, Model, Msg, Options, init, update, view)
 
 import Browser.Navigation as Nav
 import Compress
+import Compress.Format as Format
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
@@ -79,7 +80,7 @@ twitterSharingUrl text =
 
 showTextUrl : Url -> String -> Posix -> Maybe String
 showTextUrl url text date =
-    Compress.encode ( date, text )
+    Compress.encode Format.V2 ( date, text )
         |> Maybe.map
             ((\t -> [ UB.string "t" t ] |> UB.toQuery |> String.dropLeft 1)
                 >> (\q -> { url | query = Just q })

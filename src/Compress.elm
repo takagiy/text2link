@@ -4,18 +4,10 @@ import Base64
 import Bytes
 import Bytes.Decode as BD
 import Bytes.Encode as BE
+import Compress.Format as Format
+import Compress.Format.V2 as V2
 import Flate
 import Time exposing (Posix)
-
-
-stringEncoder : String -> BE.Encoder
-stringEncoder string =
-    BE.string string
-
-
-stringDecoder : Int -> BD.Decoder String
-stringDecoder width =
-    BD.string width
 
 
 encodeWith : (a -> BE.Encoder) -> a -> Maybe String
@@ -26,48 +18,67 @@ encodeWith encoder data =
         |> Flate.deflate
         |> Base64.fromBytes
         |> Maybe.map
-            (String.replace "+" "-" >> String.replace "/" "." >> String.replace "=" "")
+            (String.replace "+" "-" >> String.replace "/" "_" >> String.replace "=" "")
 
 
 decodeWith : (Int -> BD.Decoder a) -> String -> Maybe a
 decodeWith decoder compressed =
     compressed
         |> String.replace "-" "+"
-        |> String.replace "." "/"
-        |> String.replace "_" "="
+        |> String.replace "_" "/"
         |> Base64.toBytes
         |> Maybe.andThen Flate.inflate
         |> Maybe.andThen (\b -> BD.decode (decoder (Bytes.width b)) b)
 
 
-posixEncoder : Posix -> BE.Encoder
-posixEncoder date =
-    Time.posixToMillis date // 60000 |> BE.unsignedInt32 Bytes.BE
+encode : Format.Version -> ( Posix, String ) -> Maybe String
+encode version =
+    encodeWith (formatEncoder version)
 
 
-posixDecoder : BD.Decoder Posix
-posixDecoder =
-    BD.unsignedInt32 Bytes.BE |> BD.map ((*) 60000 >> Time.millisToPosix)
-
-
-packedEncoder : ( Posix, String ) -> BE.Encoder
-packedEncoder ( date, text ) =
+formatEncoder : Format.Version -> ( Posix, String ) -> BE.Encoder
+formatEncoder version data =
     BE.sequence
-        [ posixEncoder date
-        , stringEncoder text
+        [ versionEncoder version
+        , selectEncoder version data
         ]
 
 
-packedDecoder : Int -> BD.Decoder ( Posix, String )
-packedDecoder width =
-    BD.map2 Tuple.pair posixDecoder (stringDecoder (width - 4))
+versionEncoder : Format.Version -> BE.Encoder
+versionEncoder version =
+    Format.versionToInt version |> BE.unsignedInt8
 
 
-encode : ( Posix, String ) -> Maybe String
-encode =
-    encodeWith packedEncoder
+selectEncoder : Format.Version -> ( Posix, String ) -> BE.Encoder
+selectEncoder version =
+    case version of
+        Format.V2 ->
+            V2.encoder
+
+        Format.Unknown ->
+            V2.encoder
 
 
 decode : String -> Maybe ( Posix, String )
 decode =
-    decodeWith packedDecoder
+    decodeWith formatDecoder
+
+
+formatDecoder : Int -> BD.Decoder ( Posix, String )
+formatDecoder width =
+    versionDecoder |> BD.andThen (selectDecoder width)
+
+
+versionDecoder : BD.Decoder Format.Version
+versionDecoder =
+    BD.unsignedInt8 |> BD.map Format.intToVersion
+
+
+selectDecoder : Int -> Format.Version -> BD.Decoder ( Posix, String )
+selectDecoder width version =
+    case version of
+        Format.V2 ->
+            V2.decoder (width - 1)
+
+        Format.Unknown ->
+            V2.decoder (width - 1)
